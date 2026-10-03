@@ -1,6 +1,7 @@
 # P1 详细 TODO — Coding Agent 执行清单
 
 > 日期：2026-10-03  
+> 更新日期：2026-10-04  
 > 设计依据：[P1_IMPLEMENTATION_PLAN.md](P1_IMPLEMENTATION_PLAN.md)。上位范围：[IMPLEMENTATION_PLAN.md](IMPLEMENTATION_PLAN.md) P1。  
 > 所有项目当前均为未实施/未验收；本轮只完成设计文件。
 
@@ -60,7 +61,7 @@ T02 与 T03 可以在契约冻结后协调推进；Desktop Host 可在 API 稳�
 
 - [ ] T02-A 实现 Vault 相对路径规范化和范围检查，拒绝路径穿越、盘符、ADS、symlink/junction 及大小写冲突，不使用简单字符串前缀校验。
 - [ ] T02-B 支持严格 UTF-8、BOM、LF/CRLF、Frontmatter/正文边界，计算原始字节 SHA-256；读取不写回原文件。
-- [ ] T02-C 按第 6.1 节处理 null Annotation、日期字符串、作者/标签、未知 metadata；区分 invalid、unsupported 与仅警告，拒绝重复键及不受支持结构。
+- [ ] T02-C 按第 6.1 节处理 null Annotation、日期字符串、作者/标签、未知 metadata 和可选 processing_status；缺失/空值按未归档读取，archived 与登记状态分开；区分 invalid、unsupported 与仅警告，拒绝重复键及不受支持结构。
 - [ ] T02-D 提供已有 Knowledge 的只读解析与标题回退；40_Knowledge 中的 raw_source 冲突不能按 Canonical 返回。
 
 **验收：** R1a/R1b 的 metadata、Annotation 与正文分别正确；片段、转义与代码块不被修复；未要求永久机器 ID。  
@@ -75,7 +76,7 @@ T02 与 T03 可以在契约冻结后协调推进；Desktop Host 可在 API 稳�
 - [ ] T03-A 建立 documents/jobs/meta 与 schema 版本，落实 path_key 唯一和单活动扫描约束；不创建 Draft/Review 等表。
 - [ ] T03-B 提供登记读取、同路径更新、异常状态与 missing 投影；不同路径相同 URL/hash 不自动合并。
 - [ ] T03-C 将文件投影、索引代次和成功 Job 结果放在同一次发布事务中；对非法 schema 或不匹配 Vault 明确报错。
-- [ ] T03-D 正文、Annotation 和 metadata 的派生存储保持分列和可重建性质；错误/缺失记录不参与搜索。
+- [ ] T03-D 正文、Annotation 和 metadata 的派生存储保持分列和可重建性质；归档属性从 metadata_json 读取，不新增状态机；错误/缺失记录不参与搜索，已归档记录仍可检索。
 
 **验收：** 重复写入收敛到同一记录，发布失败不出现半代索引；数据库不要求用户文件补字段。  
 **验证：** 使用临时真实 SQLite 验证唯一性、事务回滚、Vault 绑定与不支持版本；不要只 mock SQL 返回值。
@@ -89,7 +90,7 @@ T02 与 T03 可以在契约冻结后协调推进；Desktop Host 可在 API 稳�
 - [ ] T04-A 只扫描 20_Sources/40_Knowledge 的受支持 Markdown，排除隐藏/临时目录和特殊链接；根目录从未存在时允许空范围。
 - [ ] T04-B 稳定读取、计算 hash、解析并准备本代投影；refresh/rebuild 按设计区分解析复用和强制重建。
 - [ ] T04-C 实现单文件与总量限额、分类计数、逐文件诊断；完整枚举失败不得做 missing 清扫或发布部分结果。
-- [ ] T04-D 发布成功后得到确定的 added/updated/unchanged/missing/invalid/unsupported 与 generation；不写回 Source。
+- [ ] T04-D 发布成功后得到确定的 added/updated/unchanged/missing/invalid/unsupported 与 generation；unchanged 和文件 indexed_at 只依据实际内容读取校验，不以路径发现替代；不写回 Source。
 
 **验收：** 真实两文件副本可登记为 2 个 Source、0 个 Knowledge，重扫无重复记录。  
 **验证：** 临时 Vault + SQLite 集成验证；目录枚举失败、文件持续变化与总量超限时上一代结果保留。
@@ -114,7 +115,7 @@ T02 与 T03 可以在契约冻结后协调推进；Desktop Host 可在 API 稳�
 **预计落点：** `packages/core/src/search/`、`packages/core/src/http/{documents,search}.ts`、首条端到端测试。  
 **规模：** 中；完成独立 Core 的用户可见路径。
 
-- [ ] T06-A Document API 读取当前磁盘文件，分别返回正文、Annotation 和 metadata，并标记 indexed_revision 与 index_stale；不只返回 SQLite 缓存正文。
+- [ ] T06-A Document API 读取当前磁盘文件，分别返回正文、Annotation 和 metadata，并返回当前 Source 归档属性，标记 indexed_revision 与 index_stale；不只返回 SQLite 缓存正文，不因详情读取自动更新索引。
 - [ ] T06-B 实现 scope、q、fields、source_type/tag/path_prefix、AND 字面匹配、Unicode 归一化、固定排序和分页。
 - [ ] T06-C 结果包含 matched_fields、snippet_field 和索引代次；Annotation 片段标为用户上下文；默认 scope 只查已有 Knowledge。
 - [ ] T06-D 执行真实输入首条切片，验证 OpenClaw.NET、573KB、volatile、counter++；在隔离副本增加 K1，验证无机器字段的知识读取与优先级。
@@ -136,7 +137,7 @@ T02 与 T03 可以在契约冻结后协调推进；Desktop Host 可在 API 稳�
 **预计落点：** discovery/jobs/storage 的既有模块及生命周期集成测试。  
 **规模：** 中；补齐现有流程的真实异常行为。
 
-- [ ] T07-A 验证普通编辑仅更新下一次扫描投影；移动/改名产生 missing+new；同 URL 不同路径保留两份记录。
+- [ ] T07-A 验证普通编辑（含隔离副本归档属性的变化）仅更新下一次扫描投影；已登记或已归档 Source 仍执行 refresh 变化检测；移动/改名产生 missing+new，同 URL 不同路径保留两份记录。
 - [ ] T07-B 无效文件不继续返回旧正文；修复后重新扫描恢复；曾存在的整个扫描根消失时停止发布缺失判定。
 - [ ] T07-C 重启时将遗留 queued/running 标 interrupted，等待用户显式重试；清理只保留最近 100 个结束 Job，不能删资产。
 - [ ] T07-D 验证活动唯一约束、重复扫描请求、发布前后进程退出和错误状态，无自动重编译或后台重试。
@@ -181,7 +182,7 @@ T02 与 T03 可以在契约冻结后协调推进；Desktop Host 可在 API 稳�
 - [ ] T10-A 实现显式 rebuild，新代发布前保留旧查询投影；不能产生半代结果。
 - [ ] T10-B 缺库时建立空库并允许显式扫描；损坏/较新 schema 报错，不自动抹掉数据库。
 - [ ] T10-C 提供停止 Core 后隔离数据库及 journal 文件的明确恢复入口；只操作配置数据目录并保留旧备份。
-- [ ] T10-D 用 R1、带 Annotation 派生样本、K1、A1 验证登记与查询可重建，内部 ID/Job 历史允许变化。
+- [ ] T10-D 用 R1、带 Annotation 派生样本、预置归档属性的 R3、K1、A1 验证全部登记与查询可重建；归档属性保持、缺失仍为未归档，重建不触发编译/审核/标记写入；内部 ID/Job 历史允许变化。
 
 **验收：** 数据库故障不导致任何用户资产丢失；恢复失败仍能诊断并保留文件与备份。  
 **验证：** 临时库删除/损坏/版本不匹配演练；恢复前后比较资产哈希、路径、关键字段与语义查询结果，不要求旧 ID 相同。
@@ -213,7 +214,7 @@ T02 与 T03 可以在契约冻结后协调推进；Desktop Host 可在 API 稳�
 **规模：** 中；不做完整产品导航。
 
 - [ ] T12-A 显示 Core/Vault/最后扫描时间，提供扫描、索引重建及受限启停动作。
-- [ ] T12-B 显示 Source 元数据/Annotation、Asset 状态和 Job 进度/错误，不显示完整网页或正文编辑器。
+- [ ] T12-B 显示 Source 元数据/Annotation、Asset 状态和 Job 进度/错误，将已归档/未归档与登记状态分开展示；不提供归档动作、完整网页或正文编辑器。
 - [ ] T12-C 提供基础搜索范围、结果和字段标签，保留 generation/新鲜度信息；不得把 Annotation 命中标成原文事实。
 - [ ] T12-D 提供用户点击触发的 Obsidian/原网页打开动作，限制 scheme；活动期间轮询，结束后停止，无后台任务重提。
 
@@ -244,7 +245,7 @@ T02 与 T03 可以在契约冻结后协调推进；Desktop Host 可在 API 稳�
 - [ ] T14-A 按设计第 13.3 节逐项执行 G1—G5，链接真实样本、命令、结果和资产哈希证据。
 - [ ] T14-B 编写独立 Core、Desktop、扫描、API Capture、查询和恢复的可复现使用说明。
 - [ ] T14-C 明确限制：单 Vault、显式扫描、只查 Source/Knowledge、改名产生新 ID、外部 URI 未在线验证、不恢复旧 Job 历史。
-- [ ] T14-D 交接文件 Schema、API、revision/索引新鲜度和恢复边界，确认没有提前建设 P2 业务。
+- [ ] T14-D 交接文件 Schema、API、revision/索引新鲜度和归档属性恢复边界；明确 P1 只读、P2 筛选、P3 成功后写标记，确认没有提前建设后续业务。
 - [ ] T14-E 只有全部通过后更新本清单与总体 TODO 的 P1 状态；不得勾选 P2 或其他阶段。
 
 **验收：** 文档、接口与实际运行一致，真实数据路径和恢复路径均得到验证。  
@@ -254,8 +255,8 @@ T02 与 T03 可以在契约冻结后协调推进；Desktop Host 可在 API 稳�
 
 - [ ] G1 独立 Core 与 Desktop Host 两种方式均可用，知识资产和运行数据分离。
 - [ ] G2 真实 Clipper 离线采集与 Core API 新建两条路径均能登记；未改造 Clipper 采集主流程。
-- [ ] G3 metadata、Annotation 与原始正文分离，来源可定位，重复发现及请求幂等。
-- [ ] G4 数据库/索引丢失或损坏后可从文件恢复，Source、Annotation、Knowledge 与附件字节不变。
+- [ ] G3 metadata、Annotation 与原始正文分离，归档属性与 ready 独立且不影响登记检索；来源可定位，重复发现及请求幂等。
+- [ ] G4 数据库/索引丢失或损坏后可从文件恢复全部登记及归档属性，Source、Annotation、Knowledge 与附件字节不变；恢复不触发编译或审核。
 - [ ] G5 既有知识可读取与检索，普通编辑不触发编译，Core 不写 Draft/Canonical。
 - [ ] **P1-G：检查点 A/B、T00—T14 与 G1—G5 全部验收通过，P1 才算完成。**
 

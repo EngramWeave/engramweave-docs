@@ -1,6 +1,7 @@
 # P1 — 本地核心与知识资产基础：详细实施设计
 
 > 日期：2026-10-03  
+> 更新日期：2026-10-04  
 > 状态：实施设计；本轮未编写或运行产品代码，未将 P1 标记为完成。  
 > 上位依据：[总体设计 v0.4](个人知识编译系统总体设计方案_v0.4.md)、[IMPLEMENTATION_PLAN.md](IMPLEMENTATION_PLAN.md) P1、[TODO.md](TODO.md) P1。  
 > Coding Agent 清单：[P1_TODO.md](P1_TODO.md)。
@@ -46,6 +47,8 @@ P1 交付一个**单 Vault、单 Core 进程、显式扫描、文件为真相源
 | Core API Capture | 接受 web/manual 的完整 Markdown，以调用者指定的 Source 相对路径创建文件；禁止覆盖现有不同内容。 |
 | Desktop 最小控制中心 | 启停自己启动的 Core、连接已有 Core、查看状态、扫描、Source 列表和基础查询；编辑仍在 Obsidian。 |
 | 可恢复性 | 删除或损坏 SQLite 后，文件仍可读；以明确的恢复操作重建登记与搜索；旧 Job 历史允许丢失。 |
+
+P1 只读取、展示和重建已有 `processing_status: archived`，缺失或为空按未归档处理；不实现归档标记的业务写入。P2 使用该属性筛选默认编译候选，P3 在用户批准的知识整合成功后自动维护标记。P1 的扫描、Capture 和恢复均不自行生成该标记。
 
 ### 2.2 Non-goals
 
@@ -142,6 +145,8 @@ P1 交付一个**单 Vault、单 Core 进程、显式扫描、文件为真相源
 
 扫描与读取都只在受限路径内执行；拒绝绝对路径、`..`、盘符、UNC、Windows ADS 和大小写折叠后发生冲突的路径。保留展示用原始大小写，Windows 登记键使用规范化大小写；不通过模糊文件名跨目录自动寻找 Source。
 
+归档属性不改变发现范围：已归档 Source 与未归档 Source 均登记、更新投影并参与搜索。refresh 保持读取全部候选文件并计算 hash 的既有规则，不因已经登记或归档而跳过内容检查。
+
 ### 5.2 一次扫描的执行过程
 
 1. 验证 Vault、根目录状态、数据目录边界及扫描限额；保存当前任务状态。
@@ -184,6 +189,7 @@ Frontmatter 必须是 YAML mapping；拒绝重复关键字段、非预期自定�
 | `source` | 原始 locator 字符串；web 要求 http/https URL | web 缺失或非法为 invalid；manual 允许无外部 URL |
 | `captured_at` | 日期 `YYYY-MM-DD` 或带时区的 ISO 时间字符串 | 缺失/null 为未知并提示；其他文本原样保留并给格式警告；禁止用扫描时间冒充采集时间 |
 | `annotation` | 字符串，允许多行；missing/null/空字符串在读取模型中归一为 `""` | 其他类型为 invalid；从正文与一般 metadata 中单独取出；不改写原表示 |
+| `processing_status` | 可选长期归档属性，仅接受非空值 `archived`；不承载临时任务状态 | missing/null/空字符串归一为 null，业务上为未归档；其他非空值或类型为 invalid；不自动补写 |
 | `asset` | 可选本地 Wiki Link 或允许的外部 URI | 有值时按资产引用处理；不得自动把 Record 正文作为该 Asset 转写 |
 | `author`、`tags` | 允许字符串或字符串数组；null 视为空列表；scalar 作为一个值，不猜测逗号拆分 | 原 metadata 保留，查询用归一化列表 |
 | `published` 及扩展属性 | JSON 兼容的普通 YAML 数据；不得执行内容 | 原样进入 metadata；不强制改名或丢弃未知字段 |
@@ -198,6 +204,7 @@ Canonical 文件不要求新增 Frontmatter。其标题、标签和 `sources` �
 | `source_type`, `title`, `original_locator`, `captured_at` | 由第 6.1 节解析得到；未知可为 null |
 | `annotation` | 用户认知上下文字符串，独立返回 |
 | `metadata` | Frontmatter 中除 annotation 外的原始属性；不将运行状态混入 |
+| `processing_status` | `archived` 或 null，源自 Record 的长期归档属性；null 表示未归档，与登记 `state=ready` 独立 |
 | `asset.kind` | `inline_markdown`、`vault_file` 或 `external_ref` |
 | `asset.locator` | 当前 Record 路径、本地 Asset 相对路径或外部 URI |
 | `asset.availability` | `available/missing/unverified/unsupported`，与 Record 本身是否有效分开 |
@@ -222,6 +229,8 @@ P1 解析本地 Wiki Link 时支持 Vault 相对路径和 Record 同目录的显
 | `meta` | 单行 `vault_path_key/schema_version/index_generation/last_scan_at/known_scan_roots` | 本机绑定与投影状态；重建后重新建立 |
 
 `documents` 同时承担 Source Registry 与已存在 Knowledge 的搜索投影，避免另建一份正文表。`source_type` 等查询列是 metadata 的派生字段。invalid/missing/unsupported 行不保留可供查询的旧正文；只保留诊断、路径及最后观测必要信息。
+
+归档属性保存在 `metadata_json` 中，读取模型和 API 从中归一化得到 `processing_status`，不新增表或独立状态机。Source 可以同时为 `state=ready` 和 `processing_status=archived`；ready 只表示登记有效，不能用来判断归档完成。
 
 metadata 查询先按固定字段过滤，tags 可从候选的 `metadata_json` 归一化读取；不提供任意 JSONPath / SQL 查询。内部 UUID 不进入 Markdown；schema 中不出现 compiled、reviewed、draft_id、provider 或 changeset 字段。
 
@@ -263,6 +272,8 @@ metadata 查询先按固定字段过滤，tags 可从候选的 `metadata_json` �
 
 列表包含 `total/limit/offset/index_generation/indexed_at`；默认 limit 20，最大 100。offset 分页只对同一 generation 稳定，客户端发现代次变化后重新查询。结果代表最后一次成功扫描，不保证实时；打开详情时重新读取文件并报告 `index_stale`。
 
+文件投影的 `indexed_at` 表示其内容最近一次成功扫描校验的时间；只有实际读取并计算 hash 后才能更新，复用解析结果仍属于已校验。列表级时间只表示投影发布完成，不能代表每条异常文件都校验成功；仅发现路径或检查 Asset 不算内容校验。`unchanged` 只统计本轮读取后 Record 字节哈希相同的文件，不表示 Asset 状态也未变化。详情读取不自动更新索引时间或归档投影。
+
 P1 基准集建议 500 份 Markdown、合计不超过 25 MiB，在记录硬件条件后验证热查询 p95 ≤ 1 秒、一次扫描 ≤ 15 秒。这是待实测的验收目标，不是已有性能结论；超限优先定位瓶颈，不以此提前引入向量库或独立搜索服务。
 
 ## 9. 最小 Core API 与 Capture 写入
@@ -282,8 +293,8 @@ P1 基准集建议 500 份 Markdown、合计不超过 25 MiB，在记录硬件�
 | `POST /v1/scans` | `{mode: refresh 或 rebuild}` | `202 {job, reused}`；活动同类合并，异类冲突 409；请求本身不阻塞等待扫描完成。 |
 | `GET /v1/jobs` | `limit/offset` | 当前与近期任务列表，按 created_at 降序、ID 破同序。 |
 | `GET /v1/jobs/{id}` | Job ID | 单个 Job 状态、summary、error；未知为 404。 |
-| `GET /v1/sources` | `state/source_type/path_prefix/limit/offset` | 返回 id/path/title/source_type/state/revision/original_locator/captured_at/asset.availability/diagnostics，以及分页和索引代次；默认 ready，path_key 升序，允许筛选异常；不返回所有正文。 |
-| `GET /v1/documents?path=…` | 限定范围内 Markdown 路径 | 从当前文件读取；返回 kind/path/revision/indexed_revision/index_stale、metadata、annotation、source_content/record_body 或 knowledge body、原始来源引用及解析结果。即使尚未登记也可读取合法路径。 |
+| `GET /v1/sources` | `state/source_type/path_prefix/limit/offset` | 返回 id/path/title/source_type/state/processing_status/revision/original_locator/captured_at/asset.availability/diagnostics，以及分页和索引代次；默认 ready，path_key 升序，允许筛选异常；不返回所有正文。 |
+| `GET /v1/documents?path=…` | 限定范围内 Markdown 路径 | 从当前文件读取；返回 kind/path/revision/indexed_revision/index_stale、metadata、annotation、source_content/record_body 或 knowledge body、原始来源引用及解析结果；Source 另返回当前 processing_status。即使尚未登记也可读取合法路径。 |
 | `GET /v1/search` | 第 8 节查询字段 | 带分类和命中字段的搜索结果；数据库未扫描时为空并注明 generation=0。 |
 | `POST /v1/captures` | `{path, markdown}` | path 只能位于 `20_Sources`，输入是完整 web/manual inline Raw Source Markdown；创建成功 201，相同路径相同字节重放 200；返回 path/revision/created/scan_required=true。 |
 
@@ -293,7 +304,7 @@ P1 基准集建议 500 份 Markdown、合计不超过 25 MiB，在记录硬件�
 
 ### 9.2 第二条 Capture 路径：最小且可恢复
 
-Core 不根据 URL 抓网页，不替调用者写总结。调用者传入完整 Markdown；Core 使用同一解析规则验证 web/manual inline Source 后，原样保存 UTF-8 字节。Manual 可以没有外部 URL，但需要可识别的 Source 类型和正文。
+Core 不根据 URL 抓网页，不替调用者写总结。调用者传入完整 Markdown；Core 使用同一解析规则验证 web/manual inline Source 后，原样保存 UTF-8 字节。Manual 可以没有外部 URL，但需要可识别的 Source 类型和正文。输入若已有合法归档属性，按原样资料导入保留；P1 不推断、生成或替用户完成归档。
 
 **发布规则：**
 
@@ -316,7 +327,7 @@ Core 不根据 URL 抓网页，不替调用者写总结。调用者传入完整 
 只做三组功能，可放在一个窗口内：
 
 1. **连接与状态：** 显示 Vault、Core 状态、最后扫描时间，启动/连接、停止自己启动的 Core、显式扫描和重建索引。
-2. **Sources / Jobs：** 显示标题、路径、来源类型、Record/Asset 状态及任务进度/错误；点击 Source 查看元数据和 Annotation，提供在 Obsidian 中打开及打开原网页的动作。
+2. **Sources / Jobs：** 显示标题、路径、来源类型、Record/Asset 状态及任务进度/错误；归档属性显示为“已归档/未归档”，与登记状态分开，不提供归档按钮。点击 Source 查看元数据和 Annotation，提供在 Obsidian 中打开及打开原网页的动作。
 3. **Search：** 输入关键词、选择 knowledge/sources/all，显示标题、路径、命中字段和短片段，在 Obsidian 中继续阅读。
 
 不渲染完整网页 HTML，不提供正文编辑、采集编辑器、AI 设置或 Review 占位界面。外部打开必须是用户点击触发，且 URI scheme 受限；无法处理的 Zotero locator 只显示，不自动执行。活动任务期间可短间隔轮询，无任务时停止轮询；断线保留清楚的状态，禁止无限创建重试任务。
@@ -333,7 +344,7 @@ Core 不根据 URL 抓网页，不替调用者写总结。调用者传入完整 
 | 损坏数据库恢复 | 先停止 Core，再由显式恢复命令将应用数据中的数据库及相关 journal 文件整体隔离备份，创建新库并扫描。恢复失败保留旧备份与新诊断；不触碰 Vault。 |
 | Vault 不可用/被移动 | 报错，不把整个库登记为已删除。用户恢复路径或显式修改配置；不得自动搜索其他磁盘认领 Vault。 |
 
-恢复范围只有文件可重建的登记和查找；旧内部 ID、Job 历史和扫描时间不保证恢复。P1 不承诺恢复用户主动删除的文件或外部网站消失的内容；这些依赖 Vault / 外部资产自身备份。
+恢复范围包括全部受支持文件的登记、查找与已有归档属性；已归档 Source 不能被跳过，缺失归档属性的资料按未归档恢复。重建不触发编译、审核或标记写入；P2 默认候选筛选可继续根据恢复后的属性排除已归档资料，该筛选不在 P1 实现。旧内部 ID、Job 历史和扫描时间不保证恢复。P1 不承诺恢复用户主动删除的文件或外部网站消失的内容；这些依赖 Vault / 外部资产自身备份。
 
 恢复演练必须在临时 Vault 与临时应用数据目录进行，先确认绝对路径范围。禁止测试脚本删除真实 Vault 或真实数据库。用正文、Annotation、已有知识和二进制附件的字节哈希验证恢复前后资产保持不变。
 
@@ -369,6 +380,7 @@ Core 不根据 URL 抓网页，不替调用者写总结。调用者传入完整 
 |---|---|---|
 | R1a / R1b 真实 Web Clipper 剪藏 | 第 4.1 节已读取的两份文件，按各自哈希原样留存 | 主要端到端输入；不能用模板渲染模拟替代；保留 CRLF/LF 差异 |
 | R2 带用户 Annotation 的剪藏 | 优先真实采集时输入；若由 R1 修改则标明派生 | 多行、引号、中文与上下文独立查询 |
+| R3 预置归档属性的剪藏 | R1 的隔离派生副本，预置 processing_status: archived，标明为测试构造 | 验证属性读取、与 ready 分离、仍可检索及数据库恢复后属性保持；不要求 P1 执行归档 |
 | K1 已有知识 | 在隔离 Vault 中由用户认可的普通 Markdown 或明确标为测试构造的样本 | 无强制机器字段、知识优先、`sources` 回链 |
 | A1 独立 Asset | 测试图片/附件 + `.source.md`；另加外部 URI Record | 引用与存在性检查，不验证 OCR 或外部网站存活 |
 | E1 异常组 | 从 R1 派生并逐个说明修改 | 空/null 字段、坏 YAML、缺字段、CRLF/BOM、非 UTF-8、超限、重复键 |
@@ -391,8 +403,8 @@ Core 不根据 URL 抓网页，不替调用者写总结。调用者传入完整 
 |---|---|---|
 | G1 Core 独立 + Desktop 管理，资产/运行数据分离 | 无 Desktop 启动全 Core 流程；Desktop 启动/连接/关闭行为符合归属；SQLite 和日志在 Vault 外 | 两种启动记录、配置、目录检查 |
 | G2 两条 Capture 路径，Core 离线仍可采集 | Core 关闭时用真实 Clipper 保存 R1，之后扫描成功；Core API 创建 web/manual 文件后显式扫描，结果语义一致 | 真实采集说明、API/Job 结果、原文件哈希 |
-| G3 区分上下文与事实、来源可定位、重复发现幂等 | 分别查询/读取 metadata、annotation、body；K1 → R1 → 网页 locator / A1 文件可追踪；重复扫描和重复请求不重复登记/执行 | 字段断言、查询排序、文件数和 Job 数对照 |
-| G4 数据库/索引丢失后资产仍在且可重建 | 在隔离环境清空或损坏 SQLite；原始 Source、Annotation、Knowledge、附件仍可读；恢复后 path/revision/字段和预期检索一致 | 恢复前后资产哈希、语义查询结果；不比较内部 ID/历史 Job |
+| G3 区分上下文与事实、来源可定位、重复发现幂等 | 分别查询/读取 metadata、annotation、body；K1 → R1 → 网页 locator / A1 文件可追踪；归档属性与 ready 独立，未归档/已归档均可登记检索；重复扫描和重复请求不重复登记/执行 | 字段断言、查询排序、文件数和 Job 数对照 |
+| G4 数据库/索引丢失后资产仍在且可重建 | 在隔离环境清空或损坏 SQLite；原始 Source、Annotation、Knowledge、附件仍可读；R3 的归档属性及其他字段、path/revision、预期检索恢复一致；无标记仍为未归档，重建不触发编译、审核或标记写入 | 恢复前后资产哈希、归档属性与语义查询结果；不比较内部 ID/历史 Job |
 | G5 既有知识可读取查找，普通编辑不编译 | K1 可通过文档 API 和关键词/metadata 查询找到；编辑 R1 后只改变文件与下次扫描投影 | 无 AI/Compiler/Draft API 或任务类型，30_Drafts/40_Knowledge 无 Core 写入差异 |
 
 只有 G1—G5 全部通过、真实 R1 到位且检查点 A/B 及边界回归完成，才可勾选总体 `P1-G`。文档完成、mock 通过或单一成功场景都不能代替这个门槛。

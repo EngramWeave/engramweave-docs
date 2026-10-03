@@ -2,6 +2,7 @@
 
 > 规划基线：`个人知识编译系统总体设计方案_v0.4.md`  
 > 编制日期：2026-10-03  
+> 更新日期：2026-10-04  
 > 配套清单：[TODO.md](TODO.md)  
 > 粒度：项目级、阶段级；本轮不编写代码、不展开 MVP 详细设计。
 
@@ -92,7 +93,7 @@
 - 建立 Core 服务、Source Registry、Job Engine、配置和系统状态的基础能力；Desktop 提供 Core 生命周期和基本运行状态管理。
 - 落实 Vault 与应用运行数据的分离、用户可维护的 `90_System` 配置，以及现有 Vault 的读取和重新发现能力。
 - 打通 Manual 与基于既有 Web Clipper / 模板的基础采集，支持直接生成规范 Raw Source 后扫描登记，以及经 Core 接入的路径。
-- 落实 Source Asset、Source Record、Source Annotation、Derived Representation 的边界和来源引用；为非 Markdown Asset 保留一致的承载能力。
+- 落实 Source Asset、Source Record、Source Annotation、Derived Representation 的边界和来源引用；为非 Markdown Asset 保留一致的承载能力。读取并展示已有 `processing_status: archived`，与登记状态分离；P1 不生成归档标记。
 - 提供既有知识的基础读取、关键词与元数据查找，供后续 Compiler、Relation Analyzer 和 Planner 使用；开始验证资产恢复与派生数据重建。
 
 **交付物：** 独立可运行的 Core 基础、本地资产与采集流程、Desktop 基础管理能力、来源引用及基础查找能力、恢复验证记录。
@@ -102,7 +103,7 @@
 1. Core 可独立运行，也可由 Desktop 管理；关闭 Desktop 不改变 Core 的架构独立性。用户资产与应用运行数据符合既定存储边界。
 2. 代表性样本可通过两种采集路径进入统一 Source 模型；Core 暂不可用时，独立 Capture 仍能保存资料，并在恢复后被登记。
 3. 能区分原始内容、用户 Annotation 与元数据，沿 Source Record 找到本地或外部原材料；重复发现不会无意制造重复处理任务。
-4. 在隔离验收环境中移除数据库或索引后，已有用户资产仍可访问，能够重新登记或重建；不要求完整恢复旧工作流流水。
+4. 在隔离验收环境中移除数据库或索引后，已有用户资产仍可访问，包括已归档 Source 在内的文件能够重新登记并恢复归档属性；重建不触发编译或审核，不要求完整恢复旧工作流流水。
 5. 已有 Canonical Knowledge 可被读取和查找；Source 普通编辑不会自行触发重新编译。
 
 **依赖：** P0。此阶段的基础读取和查找是后续 AI 使用既有知识的前提；高级语义检索不构成本阶段阻塞。
@@ -114,7 +115,7 @@
 **主要工作：**
 
 - 建立 Inference Provider 的基础接入与任务配置，使 Compiler 和关系分析使用各自的指令与规则，并开始版本化管理。
-- 建立从 Source、Source Annotation 和相关既有知识生成 Draft 的编译流程，将 AI Notes / Uncertainty 与知识正文分离。
+- 建立从 Source、Source Annotation 和相关既有知识生成 Draft 的编译流程，将 AI Notes / Uncertainty 与知识正文分离。默认候选排除已归档 Source，显式重新编译可绕过限制；执行前以当前 Record 的归档属性为准。
 - 在 Review 前提供具有明确语义的 Relation Suggestions；建议对应 Draft revision，并随 Recompile 更新。
 - 建立 Obsidian 工作流侧边栏和 Review Note 三种动作：新建灵感、Recompile、Review Complete；正文继续使用原生编辑器。
 - 为 Recompile 提供 revision、diff 与 rollback；Desktop 提供 Source、Job 和 Draft 状态的必要可见性。
@@ -127,7 +128,7 @@
 2. 关系建议在 Review 前可见，具有明确语义价值；Recompile 后建议与新 revision 对应，建议本身不直接写入正式知识。
 3. Review Note 每次只被所选动作消费，之后清空：新建灵感形成带回链的 Idea，Recompile 追加 Source Annotation，Review Complete 携带 Integration Intent。
 4. 用户编辑后的 Draft 经 Recompile 仍可查看差异并恢复；编译失败或中断不导致原始资料、Annotation 或用户修改不可恢复。
-5. Review Complete 仅确认当前正文候选并形成可交给 P3 的整合输入；此阶段不以直接移动 Draft 或跳过 ChangeSet 作为完成流程。
+5. 默认编译候选排除已归档 Source，显式重新编译可进入流程；生成 Draft 和 Review Complete 均不写归档标记。Review Complete 仅确认当前正文候选并形成可交给 P3 的整合输入，不以直接移动 Draft 或跳过 ChangeSet 作为完成流程。
 
 **依赖：** P1。P2 的验收终点是“可供整合的 Reviewed Draft”，完整正式入库闭环在 P3 验收。
 
@@ -139,7 +140,7 @@
 
 - 建立 Integration Planner，以最终 Reviewed Draft、有效关系建议、Integration Intent、既有知识与 Taxonomy 形成整合提案。
 - 建立可逐项审阅的 ChangeSet，覆盖新建、更新、拆分、融合及关系、来源引用和分类调整；保持 Existing Structure First。
-- 建立 Accept、Reject、Edit、Accept Group 等批准流程，以及由确定性 Executor 执行批准结果的能力。
+- 建立 Accept、Reject、Edit、Accept Group 等批准流程，以及由确定性 Executor 执行批准结果的能力。知识整合成功后自动保存 Source Record 的归档标记，将标记保存纳入归档完成条件，不增加确认点。
 - 验证应用前冲突检查、执行失败恢复及重要变更回退；使 Desktop Changes 与 Obsidian Diff / 审批体验衔接。
 - 用完整样本验证采集至正式知识的全链路，并通过基础检索找回已整合的知识与来源。
 
@@ -148,11 +149,11 @@
 **验收标准（P3-G）：**
 
 1. 用户能从一次 Capture 完成 Compile、Review、Integration Planning、ChangeSet Approval，并检索到最终 Canonical Knowledge。
-2. ChangeSet 条目明确 Target、Before、After、Reason、Source / Evidence、Preconditions；新建、更新、拆分、融合及仅保留 Source 等整合结果均有代表场景验证。
+2. ChangeSet 条目明确 Target、Before、After、Reason、Source / Evidence、Preconditions；新建、更新、拆分、融合等整合结果均有代表场景验证；拒绝或放弃处理不算归档成功。
 3. 未经批准和被拒绝的操作不会进入正式知识；正式变更由 Executor 执行，关系确认发生在 ChangeSet。新一级 Domain 必须得到明确确认。
 4. Planner 以最终 Draft 为准：审阅中用户修改造成过时的关系建议，不会未经检查被直接写入正式知识。
-5. 目标 Note 在提案后被修改时，系统识别冲突并要求重新计算或重新审阅；失败、重试和回退不会静默覆盖新内容或重复应用变更。
-6. 基础检索优先返回已确认知识，且能沿 Canonical Knowledge → Source Record → Source Asset 追溯；当前交付资产通过数据库损坏后的保留与恢复验证。
+5. 目标 Note 或待更新的 Source Record 在提案后被修改时，系统识别冲突并要求重新计算或重新审阅；失败、重试和回退不会静默覆盖新内容或重复应用变更。归档标记保存失败时不得宣布完成，应恢复原操作，不能因缺标记重复编译。
+6. 基础检索优先返回已确认知识，且能沿 Canonical Knowledge → Source Record → Source Asset 追溯；当前交付资产通过数据库损坏后的保留与恢复验证。完整归档后 Record 含 `processing_status: archived`，数据库重建后该属性仍可读取；部分批准但仍有待处理条目或执行失败时不算本次归档完成。
 
 **依赖：** P2 及 P1 的资产、既有知识查找和任务管理基础。后续科研、维护和 Agent 的正式知识修改复用本阶段能力。
 

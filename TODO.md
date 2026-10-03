@@ -1,7 +1,7 @@
 # EngramWeave 总体 TODO List
 
 > 依据：[IMPLEMENTATION_PLAN.md](IMPLEMENTATION_PLAN.md) 与总体设计 v0.4  
-> 更新日期：2026-10-03  
+> 更新日期：2026-10-04  
 > 粒度：阶段级成果清单，不拆分接口、模块、文件或实现任务。
 
 ## 使用规则
@@ -32,9 +32,9 @@
 - [ ] P1-01 建立独立 Core、Source Registry、Job Engine 和 Desktop 基础管理能力。
 - [ ] P1-02 落实开放知识资产、Vault 配置与应用运行数据的存储边界。
 - [ ] P1-03 打通 Manual、既有 Web Clipper / 模板及直接采集后登记、Core 接入两条路径。
-- [ ] P1-04 建立 Source Asset / Record / Annotation / Derived Representation 的区分与来源追踪。
+- [ ] P1-04 建立 Source Asset / Record / Annotation / Derived Representation 的区分与来源追踪；只读展示已有归档属性，与登记状态分离。
 - [ ] P1-05 提供既有知识读取、关键词和元数据基础查找，支撑后续 AI 上下文使用。
-- [ ] P1-06 验证资产保留、重新登记与派生数据重建，并保证普通编辑不自行触发重新编译。
+- [ ] P1-06 验证资产保留、全部 Source 重新登记及归档属性恢复；重建和普通编辑均不自行触发编译或审核。
 - [ ] **P1-G / M1：本地资产基础验收通过，可在此基础上引入编译与审阅。**
 
 ## P2 — 编译与人工审阅
@@ -43,11 +43,11 @@
 **验收依据：** 实施规划 P2-G；本阶段不等于正式知识闭环完成。
 
 - [ ] P2-01 建立 Inference Provider 接入、任务专属指令与规则版本管理基础。
-- [ ] P2-02 交付保留来源和重要条件的 Compiler，保持 Draft 正文与 AI Notes 分离。
+- [ ] P2-02 交付保留来源和重要条件的 Compiler，保持 Draft 正文与 AI Notes 分离；默认候选排除已归档 Source，显式重新编译可绕过，执行前读取当前 Record。
 - [ ] P2-03 交付 Review 前的关系建议，并使建议随 Recompile 的 Draft revision 更新。
 - [ ] P2-04 交付 Obsidian 原生编辑与工作流侧边栏，以及 Review Note 的三种动作分流。
 - [ ] P2-05 完成 Draft revision、diff、rollback 与失败恢复，保护 Annotation 和用户编辑。
-- [ ] P2-06 形成可交给整合阶段的 Reviewed Draft 与 Integration Intent，并使处理状态可见。
+- [ ] P2-06 形成可交给整合阶段的 Reviewed Draft 与 Integration Intent，并使处理状态可见；生成 Draft 和 Review Complete 均不写归档标记。
 - [ ] **P2-G：编译与正文审阅验收通过，等待 P3 完成受控正式入库。**
 
 ## P3 — 受控整合与本地闭环
@@ -57,8 +57,8 @@
 
 - [ ] P3-01 交付以最终 Reviewed Draft 为准、优先复用现有结构的 Integration Planner。
 - [ ] P3-02 交付可独立审阅的 ChangeSet，覆盖知识整合、关系、来源引用和分类调整。
-- [ ] P3-03 打通逐项批准、拒绝、编辑、成组批准与确定性 Executor 执行流程。
-- [ ] P3-04 验证过时关系建议、目标变化、执行失败、重试和重要修改回退的处理。
+- [ ] P3-03 打通逐项批准、拒绝、编辑、成组批准与确定性 Executor 执行流程；知识整合成功后自动保存 Source 归档标记，将标记保存纳入完成条件。
+- [ ] P3-04 验证过时关系建议、目标/Source Record 变化、执行失败、重试和回退；归档标记失败时幂等恢复原操作，不重复编译或应用知识变更。
 - [ ] P3-05 完成 Capture → Compile → Review → Integrate → Retrieve 全链路，验证正式知识与来源可再次找回。
 - [ ] P3-06 完成本阶段用户资产保留与恢复验证，确认未经批准的修改不会写入正式知识。
 - [ ] **P3-G / M2：完整本地知识闭环验收通过，可作为首个完整使用里程碑。**
