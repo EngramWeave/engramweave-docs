@@ -59,7 +59,29 @@ See [the user understanding decision](docs/adr/0004-user-understanding-in-compil
 - Capture saves Source first; submission does not immediately compile it.
 - EngramWeave compiles unprocessed Sources together on a configured schedule. Users can also select Sources in Desktop for immediate compilation.
 - Scheduled compilation belongs to the ordinary knowledge workflow and does not inherently depend on an Agent Worker.
-- Ordinary edits to already compiled Sources do not automatically request Recompile. Eligibility, retry, discovery, and recovery rules must be explicit; absence of `archived` alone does not mean a Source has never been compiled.
+- Schedules support a specific execution time or an interval. Missed runs are not replayed on startup; users may manually start a batch after launch.
+- Scheduled compilation selects only the `pending` (awaiting compilation) stage. It does not select compiled, reviewed, archived, invalid, or deleted/unavailable Sources merely because they lack an archival marker.
+- Sending content back for Recompile returns it to `pending`. Existing Draft edits and versions must remain recoverable.
+- Ordinary Source edits do not themselves request Recompile. Whether a Recompile action immediately executes or only returns the Source to the scheduled queue is a separate behavior decision.
+
+## Workflow stage visibility
+
+Each processing phase must have an explicit visible stage. `pending` names the stage eligible for scheduled compilation; `compiled`, `reviewed`, and `archived` distinguish Draft production, accepted body, and completed integration. Invalid or deleted/unavailable Sources are excluded from scheduled compilation.
+
+The persistence location for these stages is not yet fixed. The existing design reserves Source Record `processing_status` for the durable `archived` attribute and keeps workflow state in Core; extending that file property to include intermediate stages would change this boundary. A visible stage model must not be mistaken for an already approved file schema change.
+
+## Failure and retry behavior
+
+- Temporary failures allow a finite configurable number of retries.
+- Explicit errors or exhausted retries wait for manual action.
+- A completed Draft is retained when relationship analysis fails. Retry only the failed relationship step, not body compilation.
+
+## AI execution and task models
+
+- Direct inference and an early Codex execution entry are both in the intended initial scope. Codex access should use the user's available Codex entitlement; it must not be assumed to require a separately billed API key.
+- Early Codex integration can serve bounded request/result tasks. Complex research, cross-note maintenance, and broader Agent orchestration can be added later; an early integration does not authorize direct Agent changes to approved content.
+- Model selection is configurable by task, including compilation, AI supplementary information, relationships, integration planning, complex research, and cross-note maintenance. Separate instructions and task semantics remain intact.
+- Provider and Worker execution protocols remain distinct even if both present a simple input/result interface to the workflow.
 
 ## Documentation ownership
 
