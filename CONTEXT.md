@@ -60,55 +60,73 @@ See [the user understanding decision](docs/adr/0004-user-understanding-in-compil
 - EngramWeave compiles unprocessed Sources together on a configured schedule. Users can also select Sources in Desktop for immediate compilation.
 - Scheduled compilation belongs to the ordinary knowledge workflow and does not inherently depend on an Agent Worker.
 - Schedules support a specific execution time or an interval. Missed runs are not replayed on startup; users may manually start a batch after launch.
-- Scheduled compilation selects only the `pending` (awaiting compilation) stage. It does not select compiled, reviewed, archived, invalid, or deleted/unavailable Sources merely because they lack an archival marker.
+- Compilation selects the `pending` stage. A processing round may also handle `reviewed` Sources by creating integration proposals. Other stages are not treated as uncompiled merely because they lack an archival marker.
 - Sending content back for Recompile returns it to `pending`. Existing Draft edits and versions must remain recoverable.
 - Recompile only returns the Source to `pending`; it does not immediately invoke a model. Processing waits for the next scheduled run or a manually started batch. Ordinary Source edits do not themselves request Recompile.
 - Desktop may offer a recompile filter derived from the Core-held recompile count, allowing separate batch selection of recompile and first-compile material.
 
-## Three independent status categories
+## Independent stage, lifecycle, registration, and execution state
 
-- `processing_status` describes the content processing stage: `pending / compiled / reviewed / planned / archived / failed / discarded`. It is stored in Source Record Properties. Core stores a rebuildable projection of that property.
+- `processing_status` describes the content processing stage: `pending / compiled / reviewed / planned / archived`. It is stored in Source Record Properties. Core stores a rebuildable projection. `planned` means an inspectable ChangeSet exists, awaiting approval and execution.
+- `lifecycle_status` is independent: `active / discarded`. Source, Draft, and formal knowledge file Properties store it, with a rebuildable Core projection. Discarding preserves the previous processing stage; failure does not add a processing stage.
 - `registration_status` describes whether the file exists, is valid, and is supported: `ready / invalid / missing / unsupported`. It is stored in Core.
 - `job_status` describes one execution attempt: `queued / running / succeeded / failed / interrupted`. It is stored in Core independently of the content stage.
 - Task error details, retry counts, and recompile counts are Core data, not Source Properties.
-- Scheduled compilation selects only `processing_status: pending` and excludes invalid, missing, or unsupported files. Job ownership must prevent duplicate processing of the same pending Source.
+- A processing round re-reads the current stage. Eligible Sources are pending or reviewed, valid and supported, active, and without an ongoing task. Job ownership prevents duplicate processing.
 
 Source Registry adds `processing_status: pending` when the property is absent or empty. This applies to old Sources as well: missing stage information makes them eligible for processing after registration. Users accept recompilation caused by a missing marker; damaged knowledge files should be restored from file history or backups rather than silently inferring an authoritative stage from the database.
 
 Database reconstruction reads the stage from intact Source Properties; it does not itself erase the property or reset the stage to pending. This contract extends P1, whose implementation only supports the read-only archival value.
 
-The exact transitions for `planned`, `failed`, and `discarded`, including auxiliary task failure, must be defined without conflating a failed Job with the content stage.
+Failed tasks preserve the original Source stage. An inspectable plan does not imply approval; handling planned work must retain existing approval, conflict, and idempotent execution rules.
 
 See [the status ownership decision](docs/adr/0005-source-processing-stage-and-core-runtime-state.md).
 
 ## Failure and retry behavior
 
-- Temporary failures allow a finite configurable number of retries.
-- Explicit errors or exhausted retries wait for manual action.
+- Temporary failures permit finite configurable retries within the current round.
+- An explicit error or exhausted retries ends that round and records its error without overwriting the Source stage. Users can inspect failed round history.
+- A subsequent round may retry a Source that still satisfies the eligibility rules. Rebuilding Core can likewise permit a new attempt based on the intact Source stage.
 - A completed Draft is retained when relationship analysis fails. Retry only the failed relationship step, not body compilation.
+- Failed Review or Relation jobs do not change `compiled` or block Review Complete. The sidebar shows their failure, and users may select a batch of Drafts with failed Draft Analyzer tasks for reanalysis.
 
-## Draft retention after integration
+## Lifecycle discard and Draft cleanup
 
-Old Drafts and user edits survive Recompile. Cleanup is permitted only after successful integration, either by deleting the corresponding working material or marking it for user-managed deletion. The choice and cleanup scope are not yet fixed; approved content, Sources, and Annotation remain user assets.
+- Discard is a reversible, trash-like mark. Desktop can mark selected Sources discarded and let users filter discarded files for batch physical deletion.
+- Discarding a Source stops subsequent processing while retaining its material and stage. Users can restore it to active.
+- Before archival, discarding a Source also marks its related Draft and ChangeSet discarded. ChangeSet is a control-plane record; this does not imply adding a knowledge file for it.
+- For an archived Source, Core checks for formal knowledge references and prompts the user to choose whether those knowledge files should also be marked discarded. This is not an automatic cascade to formal content.
+- Old Drafts and user edits survive Recompile. Successful integration automatically marks related Drafts discarded for user-managed cleanup; Source, Annotation, and formal content remain unchanged apart from the required archival stage update.
+- The confirmation mechanism for formal-content discard/deletion, dependency-sensitive deletion, and restoration cascades needs explicit rules. A discard mark is not an implicit authorization to delete referenced files.
 
-## Separate body compilation and AI supplementary analysis
+## Compiler and Draft Analyzer
 
-Body compilation and AI supplementary analysis are separate model calls with separately configurable models. Combining both into a single call is not the recommended workflow.
+Body compilation returns title and body. Draft Analyzer is Core orchestration of two independent sub-tasks, Review Analyzer followed by Relation Analyzer. Each has selectable analysis templates, models, and execution paths, stores its result separately, and is bound to the same Source and Draft version. All analysis outputs belong only in the sidebar and cannot modify body content.
 
-| Supplementary-analysis input | Purpose |
+| Analysis input | Purpose |
 |---|---|
 | Draft | Focus suggestions on the actual content being prepared for integration, reducing original noise. |
 | Source including Annotation | Check omitted conditions, changed meaning, or conclusions absent from the submitted material. |
 | Relevant knowledge-library content | Discover connections, conflicts, and duplication involving existing Knowledge, Ideas, and Research. |
 
-Supplementary output contains questions, suspected errors, and additional suggestions. It belongs exclusively in the sidebar and cannot modify body content. The supplementary task's overlap with formal Relation Analyzer suggestions remains to be resolved.
+- Review Analyzer uses material-specific templates. Knowledge review may check omissions or changed meaning, question understanding, identify errors, or summarize content. Academic review may examine suspected paper errors, statistical scope, and claims to verify. It also retrieves relevant library context.
+- Relation Analyzer uses templates to suggest existing knowledge links, conflicts, integration, and merging. Knowledge-oriented analysis may emphasize the library; academic analysis may emphasize Research, new viewpoints, and connections to earlier conclusions.
+- Each sub-task obtains the context its templates need. Relation may reuse the complete Review input context, reuse Review output as a reference, or reuse neither. Context reuse aims to improve possible prompt-cache reuse; output reuse does not turn Review suggestions into approved knowledge.
+- Context/result reuse remains bound to the Source and Draft versions. Rules for changed templates, models, and other retrieved files must be explicit rather than silently treating older analysis as current.
+- An Analysis Profile combines selected Review/Relation templates, models, and execution paths into an analysis scheme. Capture can offer convenient selection of template presets.
+- API execution: Core prepares context from templates and calls the two analysis models separately. Initial API execution has no dynamic tool loop.
+- Agent execution: reuse the existing Agent runner loop to call Core Tools/MCP as needed. A Core-built tool loop is deferred until a concrete need arises.
 
 See [the separate generation decision](docs/adr/0006-separate-body-and-supplementary-generation.md).
+
+## Integration Planner reuse
+
+Planner can reuse Relation templates and tool capabilities, but its input is the final Reviewed Draft and user Integration Intent. It may run another Relation analysis to revalidate relationships. Planner remains responsible for the final integration proposal and ChangeSet; reuse does not authorize stale relationships or direct analysis writes.
 
 ## AI execution and task models
 
 - Direct inference and an early Codex execution entry are both in the intended initial scope. Codex access should use the user's available Codex entitlement; it must not be assumed to require a separately billed API key.
-- Early Codex integration can serve bounded request/result tasks. Complex research, cross-note maintenance, and broader Agent orchestration can be added later; an early integration does not authorize direct Agent changes to approved content.
+- Agent analysis can use the existing runner's tool loop through Core Tools/MCP. Complex research, cross-note maintenance, and broader orchestration remain separate extensions; an early analysis integration does not authorize direct Agent changes to approved content.
 - Model selection is configurable by task, including compilation, AI supplementary information, relationships, integration planning, complex research, and cross-note maintenance. Separate instructions and task semantics remain intact.
 - Provider and Worker execution protocols remain distinct even if both present a simple input/result interface to the workflow.
 

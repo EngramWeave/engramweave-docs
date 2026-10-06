@@ -1,5 +1,5 @@
 # Separate body compilation from supplementary analysis
 
-Body compilation organizes submitted content with Annotation and returns only title and body. A separate, independently configured model reads Source, the generated Draft, and relevant Knowledge, Ideas, and Research to produce questions, suspected errors, and supplementary suggestions for the sidebar. That analysis cannot modify the body.
+Body compilation organizes submitted content with Annotation and returns only title and body. Core separately orchestrates Draft Analyzer as Review Analyzer followed by Relation Analyzer, each configured through analysis templates, a model, and an API or Agent execution path. Both analyze the same Source and Draft versions and store independent sidebar-only results.
 
-Separating the calls avoids asking one generation to both organize content and produce commentary that could leak into the body. Draft focuses analysis on the proposed content, Source permits fidelity checks, and existing library material permits connection, conflict, and duplicate discovery.
+Separating tasks avoids asking body generation to produce commentary that could leak into the body. Review templates focus content checking; Relation templates focus connections and integration clues. An Analysis Profile combines the two. Context or output reuse is selectable, and Planner can reuse Relation capabilities while retaining responsibility for its final ChangeSet.

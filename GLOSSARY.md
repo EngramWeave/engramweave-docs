@@ -17,6 +17,16 @@ _避免_：论文自动总结器、全文知识发现器。
 
 **Review Metadata**：AI 在处理过程中提出的不确定性、潜在错误、待验证 Claim、关系和整合建议等审阅辅助信息。它们属于 Control Plane，不是 Draft 正文或用户已经认可的知识。
 
+**Draft Analyzer**：围绕待入库 Draft 生成侧边栏分析的整体能力，由 Review Analyzer 和 Relation Analyzer 两个独立子任务组成。它不修改 Draft 正文。
+
+**Review Analyzer**：按照分析模板审视 Draft 内容、投递原意及相关知识的分析能力。它产生内容疑问、错误提示、核对结果或总结等审阅辅助信息。
+
+**Relation Analyzer**：按照分析模板发现 Draft 与相关知识、想法和研究材料之间的联系、冲突及整合线索的分析能力。其建议不等于用户认可的关系。
+
+**分析模板（Analysis Template）**：面向某类材料或分析目的的一组分析要求及上下文需求。它不等同于待分析材料本身。
+
+**Analysis Profile**：组合 Review/Relation 分析模板、模型和执行路径的一套分析方案。
+
 **Source Annotation**：用户围绕 Source 长期保留的认知上下文，包括保存理由、理解、疑问和后续整理指令。它可以与投递原文一起被整理进 Draft，不要求在正文中单独标示为用户判断。
 
 **Integration Planner**：在正文审阅后，为候选内容进入既有知识体系提出新建、更新、拆分、融合和关系等整合方案的能力。它不直接执行正式知识修改。
@@ -33,7 +43,9 @@ _避免_：论文自动总结器、全文知识发现器。
 
 ## 处理阶段
 
-**processing_status**：一份 Source 的内容处理阶段，取值为 `pending / compiled / reviewed / planned / archived / failed / discarded`。它不等同于文件是否有效或某次任务是否运行成功。
+**processing_status**：一份 Source 的内容处理阶段，取值为 `pending / compiled / reviewed / planned / archived`。它不等同于文件生命周期或某次任务是否运行成功。
+
+**lifecycle_status**：文件的可恢复生命周期标记，取值为 `active / discarded`。discarded 表示待清理或停止使用，不表示文件已经物理删除，也不覆盖此前的内容处理阶段。
 
 **registration_status**：一份 Source 文件当前是否存在、有效且受支持的登记状态，取值为 `ready / invalid / missing / unsupported`。
 
@@ -46,3 +58,5 @@ _避免_：论文自动总结器、全文知识发现器。
 **已编译（compiled）**：一份 Source 已产出当前待审阅 Draft 的阶段。
 
 **已审阅（reviewed）**：当前 Draft 正文已经由用户确认、等待完成受控整合的阶段。正文确认不等同于知识归档完成。
+
+**已规划（planned）**：Planner 已生成可审阅 ChangeSet、等待批准与执行的阶段。存在整合方案不等于已经批准或归档。
