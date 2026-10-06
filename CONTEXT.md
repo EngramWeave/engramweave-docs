@@ -22,6 +22,8 @@ Already organized material may need little processing; long AI conversations may
 
 Relationship discovery should recognize meaningful links across different expressions and cover relevant Canonical Knowledge, Ideas, and Research. Phase coverage may be limited, but its limits must be explicit. Missing keyword matches or uncovered candidates do not establish that no relationship exists.
 
+The first useful release includes basic semantic recall across Knowledge, Ideas, and Research. Limited recall coverage is acceptable; keyword and explicit-link candidates alone do not satisfy that release scope. Advanced relationship retrieval can follow later.
+
 ## Content placement and research
 
 - `40_Knowledge` holds approved, independently useful concepts, principles, and methods.
@@ -131,6 +133,10 @@ See [the separate generation decision](docs/adr/0006-separate-body-and-supplemen
 
 Planner can reuse Relation templates and tool capabilities. At the start of each planning round, it reads the current reviewed Draft, user Integration Intent, and current local knowledge-library content, and fixes those inputs for that round. It may run another Relation analysis to revalidate relationships. Planner remains responsible for the integration proposal and ChangeSet; analysis reuse does not authorize direct writes.
 
+The first release supports full knowledge reorganization through this single Planner. Creating, changing, splitting, merging, reorganizing, and marking files discarded describe possible outcomes, not separate product modes or workflows. Planner decides the required changes and produces one candidate ChangeSet for the common inspect/edit/reject/replan/approve flow. Low-level execution details do not constrain planning to four fixed business operations; physical deletion remains separately authorized cleanup after discard.
+
+See [the unified integration decision](docs/adr/0012-unified-knowledge-reorganization.md).
+
 ## User-controlled review and planning
 
 - Review Complete changes `compiled` to `reviewed` and permits planning. It does not bind approval to an exact Draft version. Draft remains editable; edits do not automatically revoke review, trigger replanning, or invalidate a generated ChangeSet.
@@ -165,6 +171,7 @@ See [the scoped Git decision](docs/adr/0011-scoped-vault-git-history.md).
 ## AI execution and task models
 
 - Direct inference and an early Codex execution entry are both in the intended initial scope. Codex access should use the user's available Codex entitlement; it must not be assumed to require a separately billed API key.
+- Compiler, Review Analyzer, Relation Analyzer, and Integration Planner each support selection of API or Codex execution in the first useful release, with independently configured task models. Reuse minimal execution adapters rather than requiring the complete future Agent platform.
 - Agent analysis can use the existing runner's tool loop through Core Tools/MCP. Complex research, cross-note maintenance, and broader orchestration remain separate extensions; an early analysis integration does not authorize direct Agent changes to approved content.
 - Model selection is configurable by task, including compilation, AI supplementary information, relationships, integration planning, complex research, and cross-note maintenance. Separate instructions and task semantics remain intact.
 - Provider and Worker execution protocols remain distinct even if both present a simple input/result interface to the workflow.
