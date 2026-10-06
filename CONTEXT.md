@@ -4,9 +4,10 @@ This document clarifies the product semantics of the [overall design v0.4](ä¸ªäº
 
 ## Compilation scope
 
+- Knowledge Compiler is the complete pre-human workflow: Compiler creates the body, then Draft Analyzer runs Review Analyzer and Relation Analyzer. Human Review starts after this workflow completes; Review Analyzer is AI analysis, not human approval.
 - Users submit material they have already judged worth preserving. Compiler denoises and lightly refines it while respecting its content; it does not discover additional knowledge in unsubmitted material.
 - Paper submissions consist primarily of selected passages, highlights, and comments. Full text may provide reference context but does not expand the material to be compiled.
-- One submission produces one Draft, even when it includes multiple themes. Integration Planner proposes final creation, update, splitting, or merging through ChangeSet.
+- Source in this workflow primarily denotes the Source Record with Properties. One Source Record has one Draft work line and one final reviewed candidate, not parallel Draft candidates. Recompile preserves earlier revisions rather than creating competing work lines. Integration Planner may integrate that one candidate into multiple formal files, all referencing the same Source Record.
 - Body compilation uses submitted content and Annotation, returns a title and body, and does not combine knowledge-library analysis or supplementary commentary into that generation. Existing note references in submitted material may be retained. Users can add explanations during Review.
 - Uncertainty, suspected errors, statistical issues, claims to verify, relationships, conflicts, and integration suggestions are Review Metadata displayed in the Obsidian sidebar, not Draft body content.
 - Draft is an intermediate before integration. Long-term reading and retrieval use the user's approved integrated content.
@@ -33,6 +34,8 @@ Relationship discovery should recognize meaningful links across different expres
 ## Submission identity and archival
 
 - Each explicit submission creates an independent Source. Multiple Sources can share a paper reference while preserving their individual original locations.
+- Markdown body remains a logical Source Asset even when stored in the same file as Source Record Properties. An inline capture has no separate Asset file/reference to delete; deleting the combined file also deletes that body.
+- Capture-managed Assets under `20_Sources` belong to individual Source Records and are not shared between Records. Shared references are external Assets, outside EngramWeave's mutation/deletion authority. No managed-Asset reference-counting subsystem is required by this contract.
 - Archival records successful controlled integration of the final content produced from that submission, not completion of the entire paper or other passages.
 - Existing completion conditions apply, including successful approved operations and successful archival marker persistence.
 - Retried delivery and deliberate new submissions must be distinguished; a shared paper locator is insufficient for deduplication.
@@ -94,14 +97,19 @@ See [the status ownership decision](docs/adr/0005-source-processing-stage-and-co
 
 - Discard is a reversible, trash-like mark. Desktop can mark selected Sources discarded and let users filter discarded files for batch physical deletion.
 - Discarding a Source stops subsequent processing while retaining its material and stage. Users can restore it to active.
-- Before archival, discarding a Source also marks its related Draft and ChangeSet discarded. ChangeSet is a control-plane record; this does not imply adding a knowledge file for it.
-- For an archived Source, Core checks for formal knowledge references and prompts the user to choose whether those knowledge files should also be marked discarded. This is not an automatic cascade to formal content.
+- Before archival, discarding a Source also marks its related Draft discarded and stops further plan progress. ChangeSet is a temporary execution plan, not a lifecycle-marked file or a generic trash item; cancellation and unresolved execution follow the plan rules below.
+- Whenever a user discards a Source, Core lists all Canonical Knowledge files referencing it. Users choose which, if any, to mark discarded. Marking does not authorize physical deletion, and integration success does not automatically discard Source or formal content.
 - Old Drafts and user edits survive Recompile. Successful integration automatically marks related Drafts discarded for user-managed cleanup; Source, Annotation, and formal content remain unchanged apart from the required archival stage update.
-- The confirmation mechanism for formal-content discard/deletion, dependency-sensitive deletion, and restoration cascades needs explicit rules. A discard mark is not an implicit authorization to delete referenced files.
+- User-initiated file operations confirm an explicit target list. AI-proposed discard or deletion from Planner or Maintenance uses ChangeSet.
+- Physical deletion is a separate user cleanup action for discarded material. Default batch cleanup skips Sources still referenced by active formal content. Users may explicitly select such a Source, review the reference warning/list, and confirm deletion; broken links are not automatically rewritten.
+- Source Record deletion removes its associated Derived Representations and its Capture-owned local Asset under `20_Sources`. External references, including shared Zotero Assets, are not modified or deleted. Inline captures require no separate Asset deletion.
+- Restoration defaults to Source only and lists related objects for user-selected restoration. Old Drafts automatically discarded after successful integration are not automatically reactivated. ChangeSets are not restored through this mechanism.
 
-## Compiler and Draft Analyzer
+## Knowledge Compiler: Compiler and Draft Analyzer
 
 Body compilation returns title and body. Draft Analyzer is Core orchestration of two independent sub-tasks, Review Analyzer followed by Relation Analyzer. Each has selectable analysis templates, models, and execution paths, stores its result separately, and is bound to the same Source and Draft version. All analysis outputs belong only in the sidebar and cannot modify body content.
+
+The ordinary workflow exposes Human Review after the compilation/analysis round, with analysis failures shown when allowed. Human edits are not a normal interleaving between Review Analyzer and Relation Analyzer. Concurrent external file changes still require version checks rather than silent overwrites.
 
 | Analysis input | Purpose |
 |---|---|
@@ -111,9 +119,9 @@ Body compilation returns title and body. Draft Analyzer is Core orchestration of
 
 - Review Analyzer uses material-specific templates. Knowledge review may check omissions or changed meaning, question understanding, identify errors, or summarize content. Academic review may examine suspected paper errors, statistical scope, and claims to verify. It also retrieves relevant library context.
 - Relation Analyzer uses templates to suggest existing knowledge links, conflicts, integration, and merging. Knowledge-oriented analysis may emphasize the library; academic analysis may emphasize Research, new viewpoints, and connections to earlier conclusions.
-- Each sub-task obtains the context its templates need. Relation may reuse the complete Review input context, reuse Review output as a reference, or reuse neither. Context reuse aims to improve possible prompt-cache reuse; output reuse does not turn Review suggestions into approved knowledge.
+- Each sub-task obtains the context its templates need. Relation has three reuse choices: complete Review Analyzer input context, Review Analyzer output as reference, or neither its context nor output. This refers to AI analysis, not Human Review. Output reuse does not turn suggestions into approved knowledge.
 - Context/result reuse remains bound to the Source and Draft versions. Rules for changed templates, models, and other retrieved files must be explicit rather than silently treating older analysis as current.
-- An Analysis Profile combines selected Review/Relation templates, models, and execution paths into an analysis scheme. Capture can offer convenient selection of template presets.
+- An Analysis Profile combines selected Review/Relation templates, models, and execution paths into an analysis scheme. Users configure template definitions, models, and routes in Desktop beforehand. Capture only chooses which Review/Relation template presets to use, and the selection may be changed before processing. Execution uses the final selection and current configuration rather than a capture-time copy of the configuration.
 - API execution: Core prepares context from templates and calls the two analysis models separately. Initial API execution has no dynamic tool loop.
 - Agent execution: reuse the existing Agent runner loop to call Core Tools/MCP as needed. A Core-built tool loop is deferred until a concrete need arises.
 
@@ -121,7 +129,38 @@ See [the separate generation decision](docs/adr/0006-separate-body-and-supplemen
 
 ## Integration Planner reuse
 
-Planner can reuse Relation templates and tool capabilities, but its input is the final Reviewed Draft and user Integration Intent. It may run another Relation analysis to revalidate relationships. Planner remains responsible for the final integration proposal and ChangeSet; reuse does not authorize stale relationships or direct analysis writes.
+Planner can reuse Relation templates and tool capabilities. At the start of each planning round, it reads the current reviewed Draft, user Integration Intent, and current local knowledge-library content, and fixes those inputs for that round. It may run another Relation analysis to revalidate relationships. Planner remains responsible for the integration proposal and ChangeSet; analysis reuse does not authorize direct writes.
+
+## User-controlled review and planning
+
+- Review Complete changes `compiled` to `reviewed` and permits planning. It does not bind approval to an exact Draft version. Draft remains editable; edits do not automatically revoke review, trigger replanning, or invalidate a generated ChangeSet.
+- Before Planner starts, users may cancel Review Complete to return `reviewed` to `compiled`. Once a ChangeSet exists, canceling Review Complete cancels that unapproved candidate and returns `planned` to `compiled`; users can edit and confirm again to request a new plan.
+- Later Draft edits do not change the inputs of a running planning round or the contents of an existing candidate. No real-time Draft watcher or persistent review-version binding is required by this workflow.
+- During ChangeSet review, users compare candidate file contents against current local files and choose or edit both sides to form the final approved contents. Rejecting a candidate and requesting replanning makes Planner read current local content again.
+- Generating, inspecting, editing, or rejecting an unapproved candidate does not execute it or modify formal knowledge files. Approval causes Core to apply the final approved contents immediately. A started execution follows that approval independently of later Draft edits; execution checks target-file preconditions.
+- If a canceled or missing ChangeSet leaves a Source at `planned`, return it to `reviewed` when the reviewed Draft remains usable and wait for a new planning round. A new candidate requires new approval. Recovery after approved execution has begun is an implementation responsibility, not another user confirmation workflow.
+
+See [the review and planning decision](docs/adr/0010-user-controlled-review-and-planning.md).
+
+## Temporary ChangeSet consumption
+
+- A generated ChangeSet is temporarily persisted for inspection and approval. Execution checks versions and preconditions and applies only approved operations.
+- ChangeSet is a one-use, consumable plan, not a permanent knowledge asset or a generic recycle-bin object.
+- Successfully consumed or explicitly canceled plans are cleaned up. Unfinished operations remain until their execution outcome is clear, preventing duplicate application.
+- Successful execution cleans the plan and marks related Drafts discarded for user cleanup. Necessary Job results and error information remain; full successful ChangeSet copies need not be retained permanently.
+- Formal knowledge version history belongs to Git. Cleanup must not discard the unfinished operation needed to recover a failed archival-marker write or an ambiguous execution result.
+
+See [the temporary plan decision](docs/adr/0009-temporary-changeset-consumption.md).
+
+## Vault Git scope and commits
+
+- Git tracks `10_Ideas`, `40_Knowledge`, `50_Research`, and `60_Projects`; under `90_System`, only selected user configuration files such as Review/Relation analysis templates are tracked.
+- Under `20_Sources`, Git tracks Source Record Markdown files only. Independent Source Assets, Derived Representations, `30_Drafts`, and `00_Inbox` are excluded to keep history bounded.
+- After an approved ChangeSet is successfully applied, Core automatically commits the final versions of the tracked files involved in that integration. Earlier uncommitted user edits in those files are included; unrelated file changes are not committed.
+- Users may commit their own edits manually or configure periodic automatic commits. This does not require a Git commit before every planning round or integration; planning and candidate comparison use current local files, not the last committed versions.
+- Git commit failures and interrupted execution require recoverable implementation behavior without silently repeating approved content changes. Git is version history, not a second approval gate.
+
+See [the scoped Git decision](docs/adr/0011-scoped-vault-git-history.md).
 
 ## AI execution and task models
 

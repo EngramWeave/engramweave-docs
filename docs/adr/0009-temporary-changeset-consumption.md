@@ -1,0 +1,5 @@
+# ChangeSets are temporary consumable execution plans
+
+Persist a generated ChangeSet only as needed for inspection, approval, checked execution, and recovery of unfinished operations. After successful consumption or explicit cancellation, clean it up and retain necessary Job results and errors. A successful ChangeSet does not require a permanent complete copy, and it does not participate in lifecycle trash or restoration.
+
+An unapproved ChangeSet is only a candidate: generation, inspection, editing, and rejection do not execute it or change formal files. Canceling or losing a candidate returns planned work with a usable reviewed Draft to reviewed for a new planning round and new approval. Formal knowledge history belongs to Git rather than a parallel permanent ChangeSet archive; recovery retention applies to interrupted approved execution, not mere candidate generation. Successful integration marks related Drafts discarded for user-managed cleanup without discarding Source or formal content.

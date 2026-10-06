@@ -10,10 +10,25 @@
 
 **参考上下文（Reference Context）**：帮助理解投递内容的相关材料，例如论文全文或既有笔记。作为上下文提供的材料不因此成为本次整理对象。
 
-**Knowledge Compiler**：对用户投递内容去噪、适度提炼并尽量尊重原 Source 的知识加工能力。
+**Knowledge Compiler**：人工审阅前的整体知识加工能力，包含 Compiler 和 Draft Analyzer 两个过程。它输出待审正文及独立的侧边栏分析。
+
+**Compiler**：Knowledge Compiler 中负责对投递内容去噪、适度提炼并尊重原意、生成标题和正文的过程。
 _避免_：论文自动总结器、全文知识发现器。
 
 **Draft**：一次 Source 投递经编译产生、等待用户审阅与整合的可编辑中间产物。它不是正式知识，也不是用于长期阅读的论文综述。
+
+**Source Record**：带 Properties 的用户可读来源记录，保存一次投递的材料描述、原材料引用及认知上下文。工作流中的 Source 主要指这一记录，不等同于所引用的整篇论文。
+
+**Source Asset**：原始资料本体，包括保存的 Markdown 正文、本地原材料或外部引用的资料。它与 Source Record 逻辑分离，即使两者位于同一个物理文件中。
+
+**Derived Representation**：围绕 Source 或 Asset 生成、可以重新生成的机器表示。它辅助理解和检索，但不能替代原始材料。
+
+**Human Review**：Knowledge Compiler 整体完成后，用户阅读、编辑并确认 Draft 正文的阶段。它与 AI 执行的 Review Analyzer 是不同概念。
+_避免_：用未限定的 Review 指代 Review Analyzer。
+
+**Review Complete**：用户允许一份 Draft 进入整合规划的确认动作。它不冻结 Draft 正文，也不代表已经批准正式知识修改。
+
+**Reviewed Draft**：用户已允许进入整合规划、仍可继续编辑的 Draft；它不是某个不可变正文版本的名称。
 
 **Review Metadata**：AI 在处理过程中提出的不确定性、潜在错误、待验证 Claim、关系和整合建议等审阅辅助信息。它们属于 Control Plane，不是 Draft 正文或用户已经认可的知识。
 
@@ -30,6 +45,8 @@ _避免_：论文自动总结器、全文知识发现器。
 **Source Annotation**：用户围绕 Source 长期保留的认知上下文，包括保存理由、理解、疑问和后续整理指令。它可以与投递原文一起被整理进 Draft，不要求在正文中单独标示为用户判断。
 
 **Integration Planner**：在正文审阅后，为候选内容进入既有知识体系提出新建、更新、拆分、融合和关系等整合方案的能力。它不直接执行正式知识修改。
+
+**ChangeSet**：一次性、可消费的知识库修改提案及执行计划，供用户审阅批准后执行。它是临时工作流对象，不是正式知识资产或通用回收站中的文件。
 
 ## 整合后的内容
 
@@ -57,6 +74,6 @@ _避免_：论文自动总结器、全文知识发现器。
 
 **已编译（compiled）**：一份 Source 已产出当前待审阅 Draft 的阶段。
 
-**已审阅（reviewed）**：当前 Draft 正文已经由用户确认、等待完成受控整合的阶段。正文确认不等同于知识归档完成。
+**已审阅（reviewed）**：用户已允许 Draft 进入整合规划的阶段。它不表示正文被冻结，也不等同于知识归档完成。
 
 **已规划（planned）**：Planner 已生成可审阅 ChangeSet、等待批准与执行的阶段。存在整合方案不等于已经批准或归档。
