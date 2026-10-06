@@ -2,7 +2,7 @@
 
 > 日期：2026-10-03  
 > 更新日期：2026-10-04  
-> 状态：实施设计；本轮未编写或运行产品代码，未将 P1 标记为完成。  
+> 阶段状态：P1 已完成。本文保留其历史实施合同；后续扩展按当前总体计划的 P2 推进，不重新开启 P1 验收。
 > 上位依据：[总体设计 v0.4](个人知识编译系统总体设计方案_v0.4.md)、[IMPLEMENTATION_PLAN.md](IMPLEMENTATION_PLAN.md) P1、[TODO.md](TODO.md) P1。  
 > Coding Agent 清单：[P1_TODO.md](P1_TODO.md)。
 
@@ -48,7 +48,7 @@ P1 交付一个**单 Vault、单 Core 进程、显式扫描、文件为真相源
 | Desktop 最小控制中心 | 启停自己启动的 Core、连接已有 Core、查看状态、扫描、Source 列表和基础查询；编辑仍在 Obsidian。 |
 | 可恢复性 | 删除或损坏 SQLite 后，文件仍可读；以明确的恢复操作重建登记与搜索；旧 Job 历史允许丢失。 |
 
-P1 只读取、展示和重建已有 `processing_status: archived`，缺失或为空按未归档处理；不实现归档标记的业务写入。P2 使用该属性筛选默认编译候选，P3 在用户批准的知识整合成功后自动维护标记。P1 的扫描、Capture 和恢复均不自行生成该标记。
+P1 只读取、展示和重建已有 `processing_status: archived`，缺失或为空按未归档处理；不实现归档标记的业务写入。后续 P2 扩展为完整阶段合同，按 `pending` 筛选编译候选并由 Registry 补充缺失阶段；P3 在用户批准的知识整合成功后维护 `archived`。P1 的扫描、Capture 和恢复均不自行生成该标记。
 
 ### 2.2 Non-goals
 

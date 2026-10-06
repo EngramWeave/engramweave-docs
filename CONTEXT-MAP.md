@@ -8,6 +8,8 @@ Shared semantics and cross-component decisions belong in `doc/`. Component conte
 - [GLOSSARY.md](GLOSSARY.md): system domain definitions.
 - [docs/adr/](docs/adr/): significant cross-component decisions.
 - [Overall design v0.4](个人知识编译系统总体设计方案_v0.4.md): architecture baseline.
+- [Implementation plan](IMPLEMENTATION_PLAN.md) and [TODO](TODO.md): delivery scope and phase tracking; P1 is complete, with the first useful paper-to-knowledge loop delivered through P2 and P3.
+- [P2 plan](P2_IMPLEMENTATION_PLAN.md) and [P2 tasks](P2_TODO.md): current compilation and human-review implementation scope.
 
 ## Component ownership
 

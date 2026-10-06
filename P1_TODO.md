@@ -3,7 +3,7 @@
 > 日期：2026-10-03  
 > 更新日期：2026-10-04  
 > 设计依据：[P1_IMPLEMENTATION_PLAN.md](P1_IMPLEMENTATION_PLAN.md)。上位范围：[IMPLEMENTATION_PLAN.md](IMPLEMENTATION_PLAN.md) P1。  
-> 所有项目当前均为未实施/未验收；本轮只完成设计文件。
+> 阶段状态：P1 已完成。本文件保留历史任务拆分，未逐项回填的勾选不表示仍需重做；当前执行范围见 [总体 TODO](TODO.md) 的 P2。
 
 ## 执行约束
 
