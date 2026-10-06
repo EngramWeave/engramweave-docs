@@ -13,7 +13,7 @@ Shared semantics and cross-component decisions belong in `doc/`. Component conte
 
 | Context | Repository | Responsibility and existing documentation |
 |---|---|---|
-| Core / Desktop | [engramweave](../engramweave/) | Core contracts, persistence, jobs, Desktop hosting, and implementation decisions; [P1 contracts](../engramweave/docs/p1-contracts.md) |
+| Core / Desktop | [engramweave](../engramweave/) | [Component context](../engramweave/CONTEXT.md); Core contracts, persistence, jobs, Desktop hosting, and implementation decisions; [P1 contracts](../engramweave/docs/p1-contracts.md) |
 | Obsidian | [engramweave-obsidian](../engramweave-obsidian/) | Native editing and workflow sidebar integration |
 | Zotero | [engramweave-zotero](../engramweave-zotero/) | Reading, selected material submission, and original locations; [component context](../engramweave-zotero/CONTEXT.md) |
 | Web Clipper | [engramweave-web-clipper](../engramweave-web-clipper/) | Web capture and Source protocol adaptation |

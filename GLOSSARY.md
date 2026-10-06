@@ -33,7 +33,15 @@ _避免_：论文自动总结器、全文知识发现器。
 
 ## 处理阶段
 
+**processing_status**：一份 Source 的内容处理阶段，取值为 `pending / compiled / reviewed / planned / archived / failed / discarded`。它不等同于文件是否有效或某次任务是否运行成功。
+
+**registration_status**：一份 Source 文件当前是否存在、有效且受支持的登记状态，取值为 `ready / invalid / missing / unsupported`。
+
+**job_status**：一次具体任务的执行状态，取值为 `queued / running / succeeded / failed / interrupted`。同一 Source 可以在不同时间拥有多次任务记录。
+
 **待编译（pending）**：一份 Source 正在等待编译处理的阶段，包括新投递材料和被明确打回 Recompile 的材料。它是定时编译的候选阶段，不等同于归档属性缺失。
+
+**Recompile**：将一份 Source 明确送回待编译阶段的用户动作，保留已有 Draft 与用户修改。它本身不等同于立即执行模型调用。
 
 **已编译（compiled）**：一份 Source 已产出当前待审阅 Draft 的阶段。
 

@@ -7,7 +7,7 @@ This document clarifies the product semantics of the [overall design v0.4](ä¸ªäº
 - Users submit material they have already judged worth preserving. Compiler denoises and lightly refines it while respecting its content; it does not discover additional knowledge in unsubmitted material.
 - Paper submissions consist primarily of selected passages, highlights, and comments. Full text may provide reference context but does not expand the material to be compiled.
 - One submission produces one Draft, even when it includes multiple themes. Integration Planner proposes final creation, update, splitting, or merging through ChangeSet.
-- Existing notes may be referenced. Compiler does not add unsolicited explanations, teaching, or knowledge outside the submitted scope. Users can add explanations during Review.
+- Body compilation uses submitted content and Annotation, returns a title and body, and does not combine knowledge-library analysis or supplementary commentary into that generation. Existing note references in submitted material may be retained. Users can add explanations during Review.
 - Uncertainty, suspected errors, statistical issues, claims to verify, relationships, conflicts, and integration suggestions are Review Metadata displayed in the Obsidian sidebar, not Draft body content.
 - Draft is an intermediate before integration. Long-term reading and retrieval use the user's approved integrated content.
 
@@ -62,19 +62,48 @@ See [the user understanding decision](docs/adr/0004-user-understanding-in-compil
 - Schedules support a specific execution time or an interval. Missed runs are not replayed on startup; users may manually start a batch after launch.
 - Scheduled compilation selects only the `pending` (awaiting compilation) stage. It does not select compiled, reviewed, archived, invalid, or deleted/unavailable Sources merely because they lack an archival marker.
 - Sending content back for Recompile returns it to `pending`. Existing Draft edits and versions must remain recoverable.
-- Ordinary Source edits do not themselves request Recompile. Whether a Recompile action immediately executes or only returns the Source to the scheduled queue is a separate behavior decision.
+- Recompile only returns the Source to `pending`; it does not immediately invoke a model. Processing waits for the next scheduled run or a manually started batch. Ordinary Source edits do not themselves request Recompile.
+- Desktop may offer a recompile filter derived from the Core-held recompile count, allowing separate batch selection of recompile and first-compile material.
 
-## Workflow stage visibility
+## Three independent status categories
 
-Each processing phase must have an explicit visible stage. `pending` names the stage eligible for scheduled compilation; `compiled`, `reviewed`, and `archived` distinguish Draft production, accepted body, and completed integration. Invalid or deleted/unavailable Sources are excluded from scheduled compilation.
+- `processing_status` describes the content processing stage: `pending / compiled / reviewed / planned / archived / failed / discarded`. It is stored in Source Record Properties. Core stores a rebuildable projection of that property.
+- `registration_status` describes whether the file exists, is valid, and is supported: `ready / invalid / missing / unsupported`. It is stored in Core.
+- `job_status` describes one execution attempt: `queued / running / succeeded / failed / interrupted`. It is stored in Core independently of the content stage.
+- Task error details, retry counts, and recompile counts are Core data, not Source Properties.
+- Scheduled compilation selects only `processing_status: pending` and excludes invalid, missing, or unsupported files. Job ownership must prevent duplicate processing of the same pending Source.
 
-The persistence location for these stages is not yet fixed. The existing design reserves Source Record `processing_status` for the durable `archived` attribute and keeps workflow state in Core; extending that file property to include intermediate stages would change this boundary. A visible stage model must not be mistaken for an already approved file schema change.
+Source Registry adds `processing_status: pending` when the property is absent or empty. This applies to old Sources as well: missing stage information makes them eligible for processing after registration. Users accept recompilation caused by a missing marker; damaged knowledge files should be restored from file history or backups rather than silently inferring an authoritative stage from the database.
+
+Database reconstruction reads the stage from intact Source Properties; it does not itself erase the property or reset the stage to pending. This contract extends P1, whose implementation only supports the read-only archival value.
+
+The exact transitions for `planned`, `failed`, and `discarded`, including auxiliary task failure, must be defined without conflating a failed Job with the content stage.
+
+See [the status ownership decision](docs/adr/0005-source-processing-stage-and-core-runtime-state.md).
 
 ## Failure and retry behavior
 
 - Temporary failures allow a finite configurable number of retries.
 - Explicit errors or exhausted retries wait for manual action.
 - A completed Draft is retained when relationship analysis fails. Retry only the failed relationship step, not body compilation.
+
+## Draft retention after integration
+
+Old Drafts and user edits survive Recompile. Cleanup is permitted only after successful integration, either by deleting the corresponding working material or marking it for user-managed deletion. The choice and cleanup scope are not yet fixed; approved content, Sources, and Annotation remain user assets.
+
+## Separate body compilation and AI supplementary analysis
+
+Body compilation and AI supplementary analysis are separate model calls with separately configurable models. Combining both into a single call is not the recommended workflow.
+
+| Supplementary-analysis input | Purpose |
+|---|---|
+| Draft | Focus suggestions on the actual content being prepared for integration, reducing original noise. |
+| Source including Annotation | Check omitted conditions, changed meaning, or conclusions absent from the submitted material. |
+| Relevant knowledge-library content | Discover connections, conflicts, and duplication involving existing Knowledge, Ideas, and Research. |
+
+Supplementary output contains questions, suspected errors, and additional suggestions. It belongs exclusively in the sidebar and cannot modify body content. The supplementary task's overlap with formal Relation Analyzer suggestions remains to be resolved.
+
+See [the separate generation decision](docs/adr/0006-separate-body-and-supplementary-generation.md).
 
 ## AI execution and task models
 
