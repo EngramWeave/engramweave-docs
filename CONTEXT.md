@@ -66,7 +66,7 @@ See [the user understanding decision](docs/adr/0004-user-understanding-in-compil
 - Scheduled compilation belongs to the ordinary knowledge workflow and does not inherently depend on an Agent Worker.
 - Schedules support a specific execution time or an interval. Missed runs are not replayed on startup; users may manually start a batch after launch.
 - Compilation selects the `pending` stage. A processing round may also handle `reviewed` Sources by creating integration proposals. Other stages are not treated as uncompiled merely because they lack an archival marker.
-- Sending content back for Recompile returns it to `pending`. Existing Draft edits and versions must remain recoverable.
+- Sending content back for Recompile returns it to `pending`. The next processing round generates a new revision on the same Draft work line; earlier Drafts, including user edits, remain recoverable. Recompile must not irrecoverably overwrite edited content.
 - Recompile only returns the Source to `pending`; it does not immediately invoke a model. Processing waits for the next scheduled run or a manually started batch. Ordinary Source edits do not themselves request Recompile.
 - Desktop may offer a recompile filter derived from the Core-held recompile count, allowing separate batch selection of recompile and first-compile material.
 
@@ -81,7 +81,7 @@ See [the user understanding decision](docs/adr/0004-user-understanding-in-compil
 
 Source Registry adds `processing_status: pending` when the property is absent or empty. This applies to old Sources as well: missing stage information makes them eligible for processing after registration. Users accept recompilation caused by a missing marker; damaged knowledge files should be restored from file history or backups rather than silently inferring an authoritative stage from the database.
 
-Database reconstruction reads the stage from intact Source Properties; it does not itself erase the property or reset the stage to pending. This contract extends P1, whose implementation only supports the read-only archival value.
+Database reconstruction reads the stage from intact Source Properties; it does not itself erase the property or reset the stage to pending. This contract extends P1's archival-only read boundary. Current registration support is documented in the [Core and Desktop context](../engramweave/CONTEXT.md).
 
 Failed tasks preserve the original Source stage. An inspectable plan does not imply approval; handling planned work must retain existing approval, conflict, and idempotent execution rules.
 

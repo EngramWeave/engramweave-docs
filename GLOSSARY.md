@@ -70,7 +70,7 @@ _避免_：用未限定的 Review 指代 Review Analyzer。
 
 **待编译（pending）**：一份 Source 正在等待编译处理的阶段，包括新投递材料和被明确打回 Recompile 的材料。它是定时编译的候选阶段，不等同于归档属性缺失。
 
-**Recompile**：将一份 Source 明确送回待编译阶段的用户动作，保留已有 Draft 与用户修改。它本身不等同于立即执行模型调用。
+**Recompile**：将一份 Source 明确送回待编译阶段、供后续轮次生成同一 Draft 工作线新 revision 的用户动作，已有 Draft 与用户修改保持可恢复。它本身不等同于立即执行模型调用。
 
 **已编译（compiled）**：一份 Source 已产出当前待审阅 Draft 的阶段。
 

@@ -3,21 +3,23 @@
 > 合同：[P2_IMPLEMENTATION_PLAN.md](P2_IMPLEMENTATION_PLAN.md)；上位范围：[IMPLEMENTATION_PLAN.md](IMPLEMENTATION_PLAN.md)。
 > P1 已完成。按切片推进；尚未勾选不表示重做既有基础。
 
-实施时遵守各仓库的 `AGENTS.md`、文档规范以及涉及测试的 `tests/AGENTS.md`。当前入口是 A；有意义的资产、状态与恢复测试随相关代码交付，不以类型检查替代行为验收。
+实施时遵守各仓库的 `AGENTS.md`、文档规范以及涉及测试的 `tests/AGENTS.md`。当前入口是 B；有意义的资产、状态与恢复测试随相关代码交付，不以类型检查替代行为验收。
 
 ## A：合同、登记和投影
 
-- [ ] 扩展共享处理／生命周期／登记／Job 状态定义及受影响客户端。
-- [ ] Registry 对缺失或空 processing_status 补 pending，保护其他内容和属性。
-- [ ] 支持五阶段登记与可重建投影，错误和次数保留在 Core。
-- [ ] 验证文件阶段读取、重建不自行重置、现有资产合同相关回归。
+- [x] 扩展共享处理／生命周期／登记／Job 状态定义及受影响客户端。
+- [x] Registry 对缺失或空 processing_status 补 pending，保护其他内容和属性。
+- [x] 支持五阶段登记与可重建投影，错误和次数保留在 Core。
+- [x] 验证文件阶段读取、重建不自行重置、现有资产合同相关回归。
 
 ## B：真实执行和正文
+
+实施顺序与验证见 [B 实施计划](P2_B_IMPLEMENTATION_PLAN.md)。
 
 - [ ] 实现最小 API、Codex 适配，复用现有成熟执行能力。
 - [ ] Desktop 配置任务模型／路径，凭据和配置遵守现有资产边界。
 - [ ] Compiler 用投递内容及 Annotation 只返回标题和正文。
-- [ ] 发布一条 Source 对应一条 Draft 工作线，不覆盖用户修改。
+- [ ] 发布一条 Source 对应一条 Draft 工作线，完整保留旧 revision 与用户修改，防止不可恢复覆盖和并发编辑丢失。
 - [ ] 真实 API／Codex 各验证正文范围、用户理解合入与来源回链。
 
 ## C：召回、模板和两项分析
