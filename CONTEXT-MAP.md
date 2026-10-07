@@ -1,6 +1,6 @@
 # EngramWeave Context Map
 
-Shared semantics and cross-component decisions belong in `doc/`. Component contexts and implementation decisions belong in their respective repositories. Temporary review records and validation evidence do not belong in maintained context documents.
+Shared semantics and cross-component decisions belong in `engramweave-docs/`. Component contexts and implementation decisions belong in their respective repositories. Temporary review records and validation evidence do not belong in maintained context documents.
 
 ## System context
 

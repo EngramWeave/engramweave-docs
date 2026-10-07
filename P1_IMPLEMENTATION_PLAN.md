@@ -17,7 +17,7 @@ P1 交付一个**单 Vault、单 Core 进程、显式扫描、文件为真相源
 | 依据 | 事实及设计影响 |
 |---|---|
 | `D:/code/EngramWeave/engramweave` | 检查时目录为空；下文代码目录是未来实现建议，不是已存在模块。 |
-| 两份总体方案 | `D:/document/EngramWeave/` 与本 `doc/` 中的 v0.4 内容哈希一致；以本目录副本作为便于携带的文档引用。 |
+| 两份总体方案 | `D:/document/EngramWeave/` 与本 `engramweave-docs/` 中的 v0.4 内容哈希一致；以本目录副本作为便于携带的文档引用。 |
 | [Clipper 模板](../engramweave-web-clipper/engreamweave/EngramWeave-Web-source.json) | 使用上游模板；正文为 `content`，目录为 `20_Sources/Web/YYYY-MM/`，文件名来自网页标题。模板包含 `title/source/published/captured_at/author/annotation/type/source_type`。注意资源目录实际拼写是 `engreamweave`。 |
 | [Clipper 说明](../engramweave-web-clipper/engreamweave/README.md) | Clipper 只采集，不调用 Core，不创建内部 ID 或编译任务；P1 保持这条直接文件路径。 |
 | [Frontmatter 序列化](../engramweave-web-clipper/src/utils/shared.ts) | 空文本可能输出 `annotation:`，即 YAML null；`captured_at` 使用 date 类型，通常为 `YYYY-MM-DD`；作者可能是列表。不能只接受非空 Annotation 或完整时间戳。模板字段是 `published`，不能按 README 中举例的 `published_date` 硬编码。 |

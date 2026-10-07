@@ -7,7 +7,7 @@ This document clarifies the product semantics of the [overall design v0.4](ä¸ªäº
 - Knowledge Compiler is the complete pre-human workflow: Compiler creates the body, then Draft Analyzer runs Review Analyzer and Relation Analyzer. Human Review starts after this workflow completes; Review Analyzer is AI analysis, not human approval.
 - Users submit material they have already judged worth preserving. Compiler denoises and lightly refines it while respecting its content; it does not discover additional knowledge in unsubmitted material.
 - Paper submissions consist primarily of selected passages, highlights, and comments. Full text may provide reference context but does not expand the material to be compiled.
-- Source in this workflow primarily denotes the Source Record with Properties. One Source Record has one Draft work line and one final reviewed candidate, not parallel Draft candidates. Recompile preserves earlier revisions rather than creating competing work lines. Integration Planner may integrate that one candidate into multiple formal files, all referencing the same Source Record.
+- Source in this workflow primarily denotes the Source Record with Properties. An unarchived Source Record may have multiple Drafts. Only one Draft is selected for final integration; after successful archival, all related Drafts are marked discarded. Recompile preserves existing Drafts and user edits. Integration Planner may integrate that one candidate into multiple formal files, all referencing the same Source Record.
 - Body compilation uses submitted content and Annotation, returns a title and body, and does not combine knowledge-library analysis or supplementary commentary into that generation. Existing note references in submitted material may be retained. Users can add explanations during Review.
 - Uncertainty, suspected errors, statistical issues, claims to verify, relationships, conflicts, and integration suggestions are Review Metadata displayed in the Obsidian sidebar, not Draft body content.
 - Draft is an intermediate before integration. Long-term reading and retrieval use the user's approved integrated content.
@@ -66,7 +66,7 @@ See [the user understanding decision](docs/adr/0004-user-understanding-in-compil
 - Scheduled compilation belongs to the ordinary knowledge workflow and does not inherently depend on an Agent Worker.
 - Schedules support a specific execution time or an interval. Missed runs are not replayed on startup; users may manually start a batch after launch.
 - Compilation selects the `pending` stage. A processing round may also handle `reviewed` Sources by creating integration proposals. Other stages are not treated as uncompiled merely because they lack an archival marker.
-- Sending content back for Recompile returns it to `pending`. The next processing round generates a new revision on the same Draft work line; earlier Drafts, including user edits, remain recoverable. Recompile must not irrecoverably overwrite edited content.
+- Sending content back for Recompile returns it to `pending`. The next processing round may generate another Draft; existing Drafts, including user edits, remain recoverable. Recompile must not irrecoverably overwrite edited content.
 - Recompile only returns the Source to `pending`; it does not immediately invoke a model. Processing waits for the next scheduled run or a manually started batch. Ordinary Source edits do not themselves request Recompile.
 - Desktop may offer a recompile filter derived from the Core-held recompile count, allowing separate batch selection of recompile and first-compile material.
 
@@ -178,4 +178,4 @@ See [the scoped Git decision](docs/adr/0011-scoped-vault-git-history.md).
 
 ## Documentation ownership
 
-Cross-component semantics, architecture, and system decisions belong in `doc/`. Core/Desktop, Obsidian, Zotero, Web Clipper, and Mobile implementation contexts and decisions belong in their respective repositories. System context should not freeze component-only implementation details.
+Cross-component semantics, architecture, and system decisions belong in `engramweave-docs/`. Core/Desktop, Obsidian, Zotero, Web Clipper, and Mobile implementation contexts and decisions belong in their respective repositories. System context should not freeze component-only implementation details.

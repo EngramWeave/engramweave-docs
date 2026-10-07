@@ -17,9 +17,9 @@ P2 建立真实 Zotero 选段投递与普通网页／手动内容共用的编译
 - 一次明确投递一个 Source Record，可引用同一篇论文并保存各自位置；一次操作只收所选材料，不同步投递后的 Zotero 高亮／批注。
 - Markdown 正文是逻辑 Source Asset，可与 Record Properties 同文件；独立受管理 Asset 为 Record 专属，外部 Zotero Asset 仍由 Zotero 管理。
 - Compiler 整理 Source 内容和 Annotation 中投递的用户理解，不标注来源事实／用户判断。全文上下文不扩大投递范围，正文不加入额外模型分析。
-- 一个 Record 一条 Draft 工作线，Recompile 保留旧修改及版本，不产生并列待整合候选。P3 可能将一份 Draft 融入多份正式文件。
+- 一个未 archived 的 Record 可以有多份 Draft；最终只有一份 Draft 用于正式入库，入库成功后所有相关 Draft 标记 discarded。Recompile 保留已有 Draft、用户修改及版本。P3 可能将一份 Draft 融入多份正式文件。
 - Draft 与用户修改不能因数据库损坏丢失。Draft 不进 Git，重编译的 diff／恢复需有自身文件保留能力；无需绑定 Review Complete 的精确正文版本。
-- Recompile 的后续轮次生成同一工作线的新 revision；既有用户编辑必须保持可恢复，不增加正文替换审批点（总体设计 §8.2、§8.3）。
+- Recompile 的后续轮次可以生成另一份 Draft；既有用户编辑必须保持可恢复，不增加正文替换审批点（总体设计 §8.2、§8.3）。
 
 ### 2.2 四类状态
 
@@ -107,7 +107,7 @@ Review Note 每次被一个动作消费，成功消费后清空，不单独永�
 | 切片 | 内容 | 依赖与检查点 |
 |---|---|---|
 | A 合同和登记 | 协调扩展状态、属性写入、投影和恢复 | 现有 P1；新阶段可登记，缺失属性可补。 |
-| B 执行和正文 | API／Codex 最小适配、任务配置、Source→Draft | A；各入口真实产出并守正文范围，见 [B 实施计划](P2_B_IMPLEMENTATION_PLAN.md)。 |
+| B 执行和正文 | API／Codex 最小适配、任务配置、Source→Draft | A；各入口真实产出并守正文范围。 |
 | C 召回和分析 | 三类语义上下文、两项 Analyzer、Profile 与复用 | B；同轮输入、独立结果、双路径。 |
 | D 调度与状态 | 具体时间／间隔、手动轮次、有限重试和重分析 | A–C；不重复正文生成、不补跑。 |
 | E Capture 和 Review | Zotero 选定材料、Obsidian 侧边栏及三动作 | 对应 Core 合同可用后可并行；不复制业务逻辑。 |

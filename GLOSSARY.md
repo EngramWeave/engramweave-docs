@@ -15,7 +15,7 @@
 **Compiler**：Knowledge Compiler 中负责对投递内容去噪、适度提炼并尊重原意、生成标题和正文的过程。
 _避免_：论文自动总结器、全文知识发现器。
 
-**Draft**：一次 Source 投递经编译产生、等待用户审阅与整合的可编辑中间产物。它不是正式知识，也不是用于长期阅读的论文综述。
+**Draft**：由投递内容编译而成、可编辑且等待人工审阅的知识候选；一个未 archived 的 Source 可以有多份 Draft，最终只有一份用于正式入库。入库成功后，该 Source 的所有相关 Draft 标记 discarded。
 
 **Source Record**：带 Properties 的用户可读来源记录，保存一次投递的材料描述、原材料引用及认知上下文。工作流中的 Source 主要指这一记录，不等同于所引用的整篇论文。
 
@@ -70,7 +70,7 @@ _避免_：用未限定的 Review 指代 Review Analyzer。
 
 **待编译（pending）**：一份 Source 正在等待编译处理的阶段，包括新投递材料和被明确打回 Recompile 的材料。它是定时编译的候选阶段，不等同于归档属性缺失。
 
-**Recompile**：将一份 Source 明确送回待编译阶段、供后续轮次生成同一 Draft 工作线新 revision 的用户动作，已有 Draft 与用户修改保持可恢复。它本身不等同于立即执行模型调用。
+**Recompile**：将一份 Source 明确送回待编译阶段、供后续轮次生成另一份 Draft 的用户动作，已有 Draft 与用户修改保持可恢复。它本身不等同于立即执行模型调用。
 
 **已编译（compiled）**：一份 Source 已产出当前待审阅 Draft 的阶段。
 

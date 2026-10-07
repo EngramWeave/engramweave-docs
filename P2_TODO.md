@@ -14,13 +14,11 @@
 
 ## B：真实执行和正文
 
-实施顺序与验证见 [B 实施计划](P2_B_IMPLEMENTATION_PLAN.md)。
-
-- [ ] 实现最小 API、Codex 适配，复用现有成熟执行能力。
-- [ ] Desktop 配置任务模型／路径，凭据和配置遵守现有资产边界。
-- [ ] Compiler 用投递内容及 Annotation 只返回标题和正文。
-- [ ] 发布一条 Source 对应一条 Draft 工作线，完整保留旧 revision 与用户修改，防止不可恢复覆盖和并发编辑丢失。
-- [ ] 真实 API／Codex 各验证正文范围、用户理解合入与来源回链。
+- [x] 实现最小 API、Codex 适配，复用现有成熟执行能力。
+- [x] Desktop 配置任务模型／路径，凭据和配置遵守现有资产边界。
+- [x] Compiler 用投递内容及 Annotation 只返回标题和正文。
+- [x] 支持未 archived Source 的多份 Draft，完整保留已有 Draft、revision 与用户修改；最终一份正式入库后统一 discarded 由 P3 实现。
+- [x] 真实 API／Codex 各验证正文范围、用户理解合入与来源回链。
 
 ## C：召回、模板和两项分析
 
