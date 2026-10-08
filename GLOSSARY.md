@@ -38,6 +38,8 @@ _避免_：用未限定的 Review 指代 Review Analyzer。
 
 **Relation Analyzer**：按照分析模板发现 Draft 与相关知识、想法和研究材料之间的联系、冲突及整合线索的分析能力。其建议不等于用户认可的关系。
 
+**Semantic Recall**：从 Knowledge、Ideas、Research 中找回含义相关、表达可以不同的材料候选的检索能力。召回候选不代表关系已成立，未召回也不能证明没有联系。
+
 **分析模板（Analysis Template）**：面向某类材料或分析目的的一组分析要求及上下文需求。它不等同于待分析材料本身。
 
 **Analysis Profile**：组合 Review/Relation 分析模板、模型和执行路径的一套分析方案。
