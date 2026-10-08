@@ -85,7 +85,7 @@ M1 是已完成的 P1 基础；M2 是 P3 完成后的首个实用版本；M3 是
 - 用户对比候选与当前本地内容，编辑最终批准版本、拒绝条目或整组、取消 Review Complete 或打回重新规划。未批准过程不修改正式内容。
 - 批准后 Executor 立即应用最终内容并检查目标前置条件；Job、归档标记和 Git 提交可恢复，不能因中断再次套用同一变更。
 - Knowledge／Research 按用途归档；已有课题文件夹优先，必要新建文件夹随方案审查；新一级领域需明确批准。
-- 实现 Source／Draft／正式文件的 discarded 筛选、恢复和批量清理合同。AI 提案走 ChangeSet；用户操作按明确清单；物理删除在标记后另行确认。
+- 实现 Source／Draft／正式文件的完整 discarded 筛选、恢复和批量清理合同。Sources 的 inline Record 显式物理清理已前移至 P2 B 修订；独立 Asset 归属、Derived Representation 与完整跨类型清理仍在相应能力实现时交付。AI 提案走 ChangeSet；用户操作按明确清单；物理删除在标记后另行确认。
 
 ### 4.2 P3-G 验收
 

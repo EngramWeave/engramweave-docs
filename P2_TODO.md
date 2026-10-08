@@ -8,7 +8,7 @@
 ## A：合同、登记和投影
 
 - [x] 扩展共享处理／生命周期／登记／Job 状态定义及受影响客户端。
-- [x] Registry 对缺失或空 processing_status 补 pending，保护其他内容和属性。
+- [x] Registry 对缺失或空 processing_status 补 pending、lifecycle_status 补 active，保护其他内容和属性。
 - [x] 支持五阶段登记与可重建投影，错误和次数保留在 Core。
 - [x] 验证文件阶段读取、重建不自行重置、现有资产合同相关回归。
 
@@ -19,6 +19,10 @@
 - [x] Compiler 用投递内容及 Annotation 只返回标题和正文。
 - [x] 支持未 archived Source 的多份 Draft，完整保留已有 Draft、revision 与用户修改；最终一份正式入库后统一 discarded 由 P3 实现。
 - [x] 真实 API／Codex 各验证正文范围、用户理解合入与来源回链。
+- [x] pending／compiled 的显式重复 Compiler、Draft captured_at／annotation 保留及 90_System 用户模板。
+- [x] Sources 六个 View、五阶段／生命周期标签、Health、组合 Filter Chips、时间与排序。
+- [x] Discarded 独占 View、底部稳定工具栏、独立确认弹窗、Toast 和 active Draft 反链索引。
+- [x] 只 Discard 勾选 Draft 并保留 Source；显式清理 discarded inline Source，校验文件身份与正式引用。
 
 ## C：召回、模板和两项分析
 
@@ -32,7 +36,8 @@
 
 ## D：轮次、失败和批处理
 
-- [ ] 具体时间与间隔调度、Desktop 手动选定批处理，无启动补跑。
+- [x] Desktop 手动选定 Source 的 Compiler 批处理，逐项重读与报告，无启动补跑。
+- [ ] 具体时间与间隔调度，以及编译／分析完整处理轮次。
 - [ ] 每轮重读阶段／登记／生命周期，排除无资格和进行中材料。
 - [ ] 本轮有限可设置重试，结束后保留原内容阶段和失败历史。
 - [ ] 已有 Draft 时只重试失败分析，不重新编译正文。

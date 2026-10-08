@@ -74,12 +74,13 @@ See [the user understanding decision](docs/adr/0004-user-understanding-in-compil
 
 - `processing_status` describes the content processing stage: `pending / compiled / reviewed / planned / archived`. It is stored in Source Record Properties. Core stores a rebuildable projection. `planned` means an inspectable ChangeSet exists, awaiting approval and execution.
 - `lifecycle_status` is independent: `active / discarded`. Source, Draft, and formal knowledge file Properties store it, with a rebuildable Core projection. Discarding preserves the previous processing stage; failure does not add a processing stage.
+- Rebuildable metadata and backlink projections may be updated per file for efficiency; they never replace fresh mutation preconditions. Windows file-operation protection belongs to Core and is available without Desktop through its compiled helper. Runtime file operations do not rely on PowerShell or dynamic compilation.
 - `registration_status` describes whether the file exists, is valid, and is supported: `ready / invalid / missing / unsupported`. It is stored in Core.
 - `job_status` describes one execution attempt: `queued / running / succeeded / failed / interrupted`. It is stored in Core independently of the content stage.
 - Task error details, retry counts, and recompile counts are Core data, not Source Properties.
 - A processing round re-reads the current stage. Eligible Sources are pending or reviewed, valid and supported, active, and without an ongoing task. Job ownership prevents duplicate processing.
 
-Source Registry adds `processing_status: pending` when the property is absent or empty. This applies to old Sources as well: missing stage information makes them eligible for processing after registration. Users accept recompilation caused by a missing marker; damaged knowledge files should be restored from file history or backups rather than silently inferring an authoritative stage from the database.
+Source Registry adds `processing_status: pending` and `lifecycle_status: active` when their respective properties are absent or empty. This applies to old Sources as well: missing stage information makes them eligible for processing after registration. Users accept recompilation caused by a missing marker; damaged knowledge files should be restored from file history or backups rather than silently inferring an authoritative stage from the database.
 
 Database reconstruction reads the stage from intact Source Properties; it does not itself erase the property or reset the stage to pending. This contract extends P1's archival-only read boundary. Current registration support is documented in the [Core and Desktop context](../engramweave/CONTEXT.md).
 
@@ -98,8 +99,8 @@ See [the status ownership decision](docs/adr/0005-source-processing-stage-and-co
 ## Lifecycle discard and Draft cleanup
 
 - Discard is a reversible, trash-like mark. Desktop can mark selected Sources discarded and let users filter discarded files for batch physical deletion.
-- Discarding a Source stops subsequent processing while retaining its material and stage. Users can restore it to active.
-- Before archival, discarding a Source also marks its related Draft discarded and stops further plan progress. ChangeSet is a temporary execution plan, not a lifecycle-marked file or a generic trash item; cancellation and unresolved execution follow the plan rules below.
+- Discarding a Source stops subsequent processing while retaining its material and stage. Users can restore it to active. Users may separately discard explicitly selected active Drafts while keeping the Source and its stage unchanged; this does not physically delete any file.
+- Before archival, discarding a Source also marks all its related Drafts discarded and stops further plan progress. ChangeSet is a temporary execution plan, not a lifecycle-marked file or a generic trash item; cancellation and unresolved execution follow the plan rules below.
 - Whenever a user discards a Source, Core lists all Canonical Knowledge files referencing it. Users choose which, if any, to mark discarded. Marking does not authorize physical deletion, and integration success does not automatically discard Source or formal content.
 - Old Drafts and user edits survive Recompile. Successful integration automatically marks related Drafts discarded for user-managed cleanup; Source, Annotation, and formal content remain unchanged apart from the required archival stage update.
 - User-initiated file operations confirm an explicit target list. AI-proposed discard or deletion from Planner or Maintenance uses ChangeSet.
@@ -109,7 +110,7 @@ See [the status ownership decision](docs/adr/0005-source-processing-stage-and-co
 
 ## Knowledge Compiler: Compiler and Draft Analyzer
 
-Body compilation returns title and body. Draft Analyzer is Core orchestration of two independent sub-tasks, Review Analyzer followed by Relation Analyzer. Each has selectable analysis templates, models, and execution paths, stores its result separately, and is bound to the same Source and Draft version. All analysis outputs belong only in the sidebar and cannot modify body content.
+Body compilation returns title and body. Desktop explicitly permits active pending or compiled Sources to run Compiler again, creating another Draft without changing the independent Recompile action. A failed repeat run retains the compiled stage. Draft retains the original captured_at and annotation property values. Compiler instructions are user-editable under 90_System/Prompts/Compiler.md and are frozen when a request is accepted. Draft Analyzer is Core orchestration of two independent sub-tasks, Review Analyzer followed by Relation Analyzer. Each has selectable analysis templates, models, and execution paths, stores its result separately, and is bound to the same Source and Draft version. All analysis outputs belong only in the sidebar and cannot modify body content.
 
 The ordinary workflow exposes Human Review after the compilation/analysis round, with analysis failures shown when allowed. Human edits are not a normal interleaving between Review Analyzer and Relation Analyzer. Concurrent external file changes still require version checks rather than silent overwrites.
 
@@ -179,3 +180,9 @@ See [the scoped Git decision](docs/adr/0011-scoped-vault-git-history.md).
 ## Documentation ownership
 
 Cross-component semantics, architecture, and system decisions belong in `engramweave-docs/`. Core/Desktop, Obsidian, Zotero, Web Clipper, and Mobile implementation contexts and decisions belong in their respective repositories. System context should not freeze component-only implementation details.
+
+## Sources browsing
+
+Source Health is displayed as available / missing / invalid / unsupported; the existing registration wire value ready means available. Sources shows six views: the first five exclude discarded Sources, while Discarded exclusively contains them. All Sources contains the remaining registered Sources, Pending selects pending, Processing selects compiled/reviewed/planned, Archived selects archived, and Issues selects missing/invalid/unsupported. The first five may overlap. Processing directly displays processing_status (pending/compiled/reviewed/planned/archived); Lifecycle directly displays lifecycle_status (active/discarded). Detailed processes and logs belong in their own pages. Failed executions do not add a Health issue. Missing or unreadable files may retain their last readable stage and lifecycle projection; these are last-known values, not proof that the current file is valid. Sources Inspector and Discard previews show active Drafts only. Batch controls occupy a stable bottom position, target confirmation uses a separate dialog, and execution feedback uses a transient toast with accessible per-item results.
+
+Source filters combine dimensions with AND and categories within a dimension with OR. Tags come from Registry. Captured Time supports day and bounded date ranges. Desktop batch operations apply the existing individual action contract sequentially to explicitly selected Sources, with per-item outcomes and fresh eligibility checks.

@@ -30,7 +30,7 @@ P2 建立真实 Zotero 选段投递与普通网页／手动内容共用的编译
 | registration_status | ready / invalid / missing / unsupported | Core。 |
 | job_status | queued / running / succeeded / failed / interrupted | Core。 |
 
-Registry 缺失／空 processing_status 时补 pending，保护正文、Annotation 和其他属性；历史材料同样适用。重建数据库读取完整文件属性，不自行重置阶段。错误、失败轮次、重试及重编译计数属于 Core。
+Registry 缺失／空 processing_status 时补 pending，缺失／空 lifecycle_status 时补 active，保护正文、Annotation 和其他属性；历史材料同样适用。重建数据库读取完整文件属性，不自行重置阶段。错误、失败轮次、重试及重编译计数属于 Core。
 
 P2 的阶段动作包括 pending→compiled、Review Complete 的 compiled→reviewed、规划尚未开始时取消的 reviewed→compiled，以及 Recompile 返回 pending。planned／archived 的正式推进和候选取消在 P3 完成。失败仅 Job 状态，discarded 不覆盖阶段。
 
@@ -69,7 +69,7 @@ Capture -> Source saved -> Registry
   -> reviewed + Integration Intent (P3 input)
 ```
 
-每轮执行前重读 Source 阶段、登记和生命周期；编译只选有效、active、pending、无进行中任务的 Source。reviewed 在 P3 用于规划；compiled／planned／archived 不能因为没有完成某个辅助任务就再次自动编译正文。
+每轮执行前重读 Source 阶段、登记和生命周期；编译只选有效、active、pending、无进行中任务的 Source。reviewed 在 P3 用于规划；compiled／planned／archived 不能因为没有完成某个辅助任务就再次自动编译正文。Desktop 的明确单项或多选 Compiler 可选择 active 的 pending／compiled Source，新增另一份 Draft；这不改变 Recompile 仅返回 pending 的动作语义。
 
 调度支持具体时间与间隔；用户可在 Desktop 选取 Source 立即处理一轮。投递只保存 Source，不立即编译；启动不补跑错过计划。
 
@@ -122,3 +122,9 @@ Review Note 每次被一个动作消费，成功消费后清空，不单独永�
 数据库重建不丢用户文件、Intent 和阶段；模型输出合法不代表忠实度通过，正文及分析质量需人工核验。测试、现场输出、临时证据放 .local/p2/；稳定文档记录合同及复现方法。
 
 交付物为 Core 编译／分析／状态／召回／调度能力、Desktop 必要配置和管理、Zotero Capture 插件、Obsidian Review 侧边栏、可恢复 Draft 与 Integration Intent，以及满足整体计划 P2-G 的验证。正式知识写入留给 P3，不提前宣布实用闭环完成。
+
+### Sources 展示与显式操作
+
+Sources 按 All Sources／Pending／Processing／Archived／Issues／Discarded 六个 View 浏览。discarded Source 只出现在 Discarded，其余五个 View 可以重叠。Health 使用 available／missing／invalid／unsupported；Processing 直接展示 processing_status 的 pending／compiled／reviewed／planned／archived；Lifecycle 直接展示 lifecycle_status 的 active／discarded。详细任务与日志放对应页面。Processing View 精确选择 compiled／reviewed／planned；Issues 只按 Health 选择，不接收 Job 失败。筛选维度间 AND、同维度类别 OR，采用可删除 Filter Chips、Clear all 和排序。底部固定多选工具栏、独立目标确认弹窗和 Toast 避免选择导致列表跳动。
+
+Core 按单项合同依次执行 Compile／Discard／Restore，并支持只 Discard 勾选 Draft 而保留 Source。Inspector 与操作预览不重复显示 discarded Draft。Source 的显式物理清理前移至此修订：只允许已 discarded 的 Source，明确清单确认，active 正式引用默认跳过、用户可明确覆盖；不自动删除 Draft 或改写坏链。当前 Capture 均为 inline，因此清理 Record 与内联正文；完整 Capture 专属独立 Asset／Derived Representation 清理仍随相关能力实施，不能按目录猜测资产归属。

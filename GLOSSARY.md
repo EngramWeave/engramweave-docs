@@ -60,11 +60,18 @@ _避免_：用未限定的 Review 指代 Review Analyzer。
 
 ## 处理阶段
 
-**processing_status**：一份 Source 的内容处理阶段，取值为 `pending / compiled / reviewed / planned / archived`。它不等同于文件生命周期或某次任务是否运行成功。
+**processing_status（Processing）**：一份 Source 的内容处理阶段，取值为 `pending / compiled / reviewed / planned / archived`。它不等同于文件生命周期或某次任务是否运行成功。
 
-**lifecycle_status**：文件的可恢复生命周期标记，取值为 `active / discarded`。discarded 表示待清理或停止使用，不表示文件已经物理删除，也不覆盖此前的内容处理阶段。
+**lifecycle_status（Lifecycle）**：文件的可恢复生命周期标记，取值为 `active / discarded`。discarded 表示待清理或停止使用，不表示文件已经物理删除，也不覆盖此前的内容处理阶段。
 
-**registration_status**：一份 Source 文件当前是否存在、有效且受支持的登记状态，取值为 `ready / invalid / missing / unsupported`。
+**Discard**：将材料标记为 discarded、停止当前使用但仍保留文件的可恢复动作。单独 Discard Draft 不表示 Discard 其来源 Source。
+_避免_：用“删除”指代生命周期标记。
+
+**Physical Delete**：对已 discarded 材料另行确认后，永久移除其文件的清理动作。
+_避免_：Discard、把标记废弃当成物理删除授权。
+
+**Source Health**：一份 Source 当前是否可用、存在、有效且受支持，取值为 `available / missing / invalid / unsupported`，独立于内容阶段及执行成败。
+_避免_：Source State、用 Ready 表示可用性。
 
 **job_status**：一次具体任务的执行状态，取值为 `queued / running / succeeded / failed / interrupted`。同一 Source 可以在不同时间拥有多次任务记录。
 
