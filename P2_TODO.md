@@ -3,7 +3,7 @@
 > 合同：[P2_IMPLEMENTATION_PLAN.md](P2_IMPLEMENTATION_PLAN.md)；上位范围：[IMPLEMENTATION_PLAN.md](IMPLEMENTATION_PLAN.md)。
 > P1 已完成。按切片推进；尚未勾选不表示重做既有基础。
 
-实施时遵守各仓库的 `AGENTS.md`、文档规范以及涉及测试的 `tests/AGENTS.md`。当前入口是 B；有意义的资产、状态与恢复测试随相关代码交付，不以类型检查替代行为验收。
+实施时遵守各仓库的 `AGENTS.md`、文档规范以及涉及测试的 `tests/AGENTS.md`，按 A–F 的实际依赖推进。有意义的资产、状态与恢复测试随相关代码交付，不以类型检查替代行为验收。
 
 ## A：合同、登记和投影
 
@@ -28,11 +28,11 @@
 
 - [x] 扩展 Knowledge／Ideas／Research 读取上下文，建立基本语义召回。
 - [x] 用不同表达的相关材料验证召回，并记录有限覆盖。
-- [ ] Desktop 配置 Review／Relation 模板、内容、模型、路径和 Profile。
-- [ ] 预设选择可在 Source pending 期间修改，执行读取最终选择和当前配置。
-- [ ] Review Analyzer、Relation Analyzer 同轮输入、独立模型和独立结果。
-- [ ] Relation 三档复用，结果只进侧边栏，不改正文和正式知识。
-- [ ] 两项任务分别验证 API／Codex 路径，必要 Core Tools／MCP 只承接当前需求。
+- [x] Desktop 配置 Review／Relation 模板、内容、模型、路径和 Profile。
+- [x] 预设选择可在 Source pending 期间修改，执行读取最终选择和当前配置。
+- [x] Review Analyzer、Relation Analyzer 同轮输入、独立模型和独立结果。
+- [x] Relation 三档复用与侧边栏只读结果合同，不改正文和正式知识；原生侧边栏展示由 E2 接入。
+- [x] 两项任务分别验证 API／Codex 路径，必要 Core Tools／MCP 只承接当前需求。
 
 ## D：轮次、失败和批处理
 
