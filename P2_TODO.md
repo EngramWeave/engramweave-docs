@@ -26,8 +26,8 @@
 
 ## C：召回、模板和两项分析
 
-- [ ] 扩展 Knowledge／Ideas／Research 读取上下文，建立基本语义召回。
-- [ ] 用不同表达的相关材料验证召回，并记录有限覆盖。
+- [x] 扩展 Knowledge／Ideas／Research 读取上下文，建立基本语义召回。
+- [x] 用不同表达的相关材料验证召回，并记录有限覆盖。
 - [ ] Desktop 配置 Review／Relation 模板、内容、模型、路径和 Profile。
 - [ ] 预设选择可在 Source pending 期间修改，执行读取最终选择和当前配置。
 - [ ] Review Analyzer、Relation Analyzer 同轮输入、独立模型和独立结果。
