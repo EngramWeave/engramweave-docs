@@ -1,0 +1,3 @@
+# Direct Draft publication for the Obsidian MVP
+
+To deliver a usable native editing and review loop before full integration planning, the Obsidian MVP lets the user explicitly approve the current Draft and create one new note under `40_Knowledge` through Core. This scoped path bypasses Integration Planner, Integration Intent and ChangeSet approval; it does not redefine Review Complete or authorize AI to edit existing formal notes. Source provenance, fresh file checks, recoverable application, Source archival and retained discarded Drafts still apply. Automatic scoped Vault Git commits are deferred in this MVP by explicit user decision; ADR-0011 remains the target contract for full integration.

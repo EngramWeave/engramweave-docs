@@ -158,6 +158,12 @@ See [the unified integration decision](docs/adr/0012-unified-knowledge-reorganiz
 
 See [the review and planning decision](docs/adr/0010-user-controlled-review-and-planning.md).
 
+## Obsidian MVP direct publication
+
+The early Obsidian MVP provides an explicit human `Publish to Knowledge` action after a Draft Analyzer attempt has ended; failed analysis remains visible and does not prohibit human approval. It creates one new note under `40_Knowledge` from the current user-edited Draft, preserves its Source link, body and other Properties, and refuses to overwrite an existing file. The Draft is retained rather than moved. Only one final Draft may be published for that Source; successful application marks all its related Drafts discarded and records `processing_status: archived` on the Source without changing Source Annotation or material. A file conflict or interrupted application remains recoverable and must not be reported as completed archival.
+
+This MVP supports the current Compiler's one-Source Drafts. It bypasses Integration Planner, Integration Intent and ChangeSet review, while the full Review Complete and planning semantics remain unchanged. It does not merge into existing notes, create Research content, or implement scheduling. Automatic Vault Git commits are explicitly deferred; users manage formal file history with their existing Git tools. Core owns this path independently of Desktop or Obsidian being open. Ordinary editing and startup do not start models. See [the MVP decision](docs/adr/0015-mvp-direct-draft-publication.md).
+
 ## Temporary ChangeSet consumption
 
 - A generated ChangeSet is temporarily persisted for inspection and approval. Execution checks versions and preconditions and applies only approved operations.

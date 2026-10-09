@@ -46,9 +46,13 @@
 
 ## E：Zotero Capture 与 Obsidian Review
 
+提前交付的 Obsidian MVP 使用 Context／ADR-0015 的人工直接入库路径；不等同于以下完整 E 的全部动作或 P3。自动 Vault Git 暂缓。
+
+- [x] Obsidian MVP：现有 Source→Compiler→Analyzer、原生 Draft 编辑、侧边栏结果及直接入库 `40_Knowledge`，保留 Source 和 Draft、可恢复归档。
+
 - [ ] Zotero 投递明确选择段落／高亮／批注，一次独立 Source。
 - [ ] 保留论文和位置链接、分析预设；不投其他材料、不同步后续修改。
-- [ ] 原生 Obsidian 编辑与侧边栏 Source Annotation／AI 分析／关系建议。
+- [x] 原生 Obsidian 编辑与侧边栏 Source Annotation／AI 分析／关系建议。
 - [ ] Review Note 新建灵感，正确回链 Source 和 Draft。
 - [ ] Recompile 追加 Annotation、返回 pending，不立即执行模型。
 - [ ] Review Complete 保存 Intent、返回 reviewed，无精确正文绑定。

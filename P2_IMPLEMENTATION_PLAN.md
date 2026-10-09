@@ -6,7 +6,11 @@
 
 ## 1. 阶段范围
 
-P2 建立真实 Zotero 选段投递与普通网页／手动内容共用的编译审阅流程。终点是用户允许进入 Integration Planner 的 Draft 与 Integration Intent；Planner、ChangeSet 审查、正式 Knowledge／Research 应用和 Git 提交在 P3 实现。
+P2 建立真实 Zotero 选段投递与普通网页／手动内容共用的编译审阅流程。完整 P2 的终点是用户允许进入 Integration Planner 的 Draft 与 Integration Intent；Planner、ChangeSet 审查、正式 Knowledge／Research 应用和 Git 提交在 P3 实现。提前交付的 Obsidian MVP 例外路径见 §1.1。
+
+### 1.1 提前交付 Obsidian MVP
+
+先串通现有 Compiler／Analyzer 与原生 Draft 编辑、侧边栏分析、人工直接入库。用户明确确认后由 Core 在 `40_Knowledge` 新建一份当前 Draft 的正式笔记；不覆盖已有文件，不执行 Planner 或 ChangeSet 审批。保留 Source 回链与 Draft 文件，完成后 Source archived、相关 Draft discarded。自动 Vault Git 本轮暂缓。完整 D、Zotero、Review Note 三动作及 Planner／ChangeSet 流程的交付状态仍独立维护，不能因 MVP 完成而宣布完整 P2／P3 完成。系统语义及限制见 Context 与 ADR-0015。
 
 纳入 Source 阶段扩展、定时与手动轮次、Compiler、两项 Analyzer、基本语义召回、Analysis Profile、真实 API／Codex 适配、Desktop 配置和运行状态、Zotero 采集插件、Obsidian 侧边栏及 Draft 编辑保护。首期不自建 API 工具循环，不实现复杂研究／跨笔记维护平台，不要求整篇 PDF 解析或自动发现其他知识。
 
