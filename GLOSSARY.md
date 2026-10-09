@@ -81,6 +81,8 @@ _避免_：Source State、用 Ready 表示可用性。
 
 **Recompile**：将一份 Source 明确送回待编译阶段、供后续轮次生成另一份 Draft 的用户动作，已有 Draft 与用户修改保持可恢复。它本身不等同于立即执行模型调用。
 
+**Recompile count**：用户成功提交的独立 Recompile 动作次数。它区别于 Compiler 执行次数、模型重试次数和 Draft 数量。
+
 **已编译（compiled）**：一份 Source 已产出当前待审阅 Draft 的阶段。
 
 **已审阅（reviewed）**：用户已允许 Draft 进入整合规划的阶段。它不表示正文被冻结，也不等同于知识归档完成。

@@ -37,12 +37,13 @@
 ## D：轮次、失败和批处理
 
 - [x] Desktop 手动选定 Source 的 Compiler 批处理，逐项重读与报告，无启动补跑。
-- [ ] 具体时间与间隔调度，以及编译／分析完整处理轮次。
-- [ ] 每轮重读阶段／登记／生命周期，排除无资格和进行中材料。
-- [ ] 本轮有限可设置重试，结束后保留原内容阶段和失败历史。
-- [ ] 已有 Draft 时只重试失败分析，不重新编译正文。
-- [ ] 显示分析失败，可继续审阅，支持单独／批量重分析。
-- [ ] Desktop 展示 Source／Draft／Job，提供待处理和重编译计数筛选。
+- [x] 每天固定时刻／间隔与时区配置，以及 Core 编译／分析完整处理轮次；忙时合并一轮，停止／睡眠／重启不补跑。
+- [x] 每轮重读阶段／登记／生命周期，排除无资格和进行中材料。
+- [x] 本轮有限可设置重试，结束后保留原内容阶段和失败历史。
+- [x] 已有 Draft 时只重试失败分析，不重新编译正文。
+- [x] 显示分析失败，可继续审阅；独立 Retry Review／Retry Relation 与单独／批量重分析，只运行用户选择的任务。
+- [x] 最小 Recompile 反馈动作及幂等计数：追加 Annotation、返回 pending，不立即执行模型；不把重复 Compiler／自动重试计作 Recompile。
+- [x] Desktop 展示 Source／Draft／Job，提供待处理和重编译计数筛选。
 
 ## E：Zotero Capture 与 Obsidian Review
 
@@ -54,7 +55,7 @@
 - [ ] 保留论文和位置链接、分析预设；不投其他材料、不同步后续修改。
 - [x] 原生 Obsidian 编辑与侧边栏 Source Annotation／AI 分析／关系建议。
 - [ ] Review Note 新建灵感，正确回链 Source 和 Draft。
-- [ ] Recompile 追加 Annotation、返回 pending，不立即执行模型。
+- [x] Recompile 追加 Annotation、返回 pending，不立即执行模型；最小动作由 D 提供，E 完整 Review Note 集成继续复用。
 - [ ] Review Complete 保存 Intent、返回 reviewed，无精确正文绑定。
 - [ ] 规划未开始时取消 Review Complete 返回 compiled。
 - [ ] 动作正确消费／清空输入，断线和重试不丢输入或重复追加。

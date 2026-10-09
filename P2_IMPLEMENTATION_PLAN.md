@@ -1,7 +1,7 @@
 # P2：论文投递、编译与人工审阅实施计划
 
 > 基线：[总体设计 v0.4](个人知识编译系统总体设计方案_v0.4.md)、[CONTEXT.md](CONTEXT.md)、[IMPLEMENTATION_PLAN.md](IMPLEMENTATION_PLAN.md)。
-> 更新日期：2026-10-07。P1 已完成；本阶段扩展现有合同，不重新验收 P1。
+> 更新日期：2026-10-09。P1 已完成；本阶段扩展现有合同，不重新验收 P1。
 > 执行清单：[P2_TODO.md](P2_TODO.md)。首个实用闭环由 P2 和 P3 共同完成。
 
 ## 1. 阶段范围
@@ -54,6 +54,8 @@ Desktop 提前配置模板、模板内容、模型和路径，形成 Review／Re
 
 Review Analyzer 可针对知识理解、条件遗漏、原意或学术 Claim／统计等进行分析。Relation Analyzer 可面向知识关联或 Research 的观点、结论、冲突及整合建议。结果分别保存，只在 Obsidian 侧边栏展示。
 
+默认各输出 0–3 项最有价值的短建议，每项 1–2 句，不重复总结 Draft；详情折叠。模型用本任务短证据 ID 引用材料，Core 补齐实际版本和片段范围，保留追溯及过期检查；分类和常规覆盖说明不要求模型填写。模板仍可个性化请求更详细内容。Compiler、Review 和 Relation 的 API 输出 token 预算独立可配置，保存不启动模型。
+
 两项 Analyzer 绑定本轮相同 Source／Draft 输入，分别获得模板需要的上下文。Relation 三档复用：Review 全输入上下文；仅输出参考；上下文及输出均不复用。这里的 Review 指 AI Review Analyzer，不是之后的 Human Review。
 
 是否参考本轮 Review 输出由用户在设置中按偏好选择，不是 Relation 的必需依赖。没有合法输出时直接独立执行 Relation，使用自己的输入和上下文；Review 自身失败按原机制处理，不增加提示或特殊降级状态，不引用旧轮输出替代。
@@ -79,11 +81,17 @@ Capture -> Source saved -> Registry
 
 每轮执行前重读 Source 阶段、登记和生命周期；编译只选有效、active、pending、无进行中任务的 Source。reviewed 在 P3 用于规划；compiled／planned／archived 不能因为没有完成某个辅助任务就再次自动编译正文。Desktop 的明确单项或多选 Compiler 可选择 active 的 pending／compiled Source，新增另一份 Draft；这不改变 Recompile 仅返回 pending 的动作语义。
 
-调度支持具体时间与间隔；用户可在 Desktop 选取 Source 立即处理一轮。投递只保存 Source，不立即编译；启动不补跑错过计划。
+调度支持用户配置每天固定时刻或时间间隔，保存并展示时区，默认取本机当前时区；用户可在 Desktop 选取 Source 立即处理一轮。投递只保存 Source，不立即编译。Core 正常运行但忙时最多合并等待一轮，空闲后执行；停止、睡眠或重启期间错过的不补跑、不积压。保存设置不调用模型。
 
 临时故障本轮有限重试，次数可设置。明确错误或耗尽结束本轮，保存错误及原阶段；下一轮符合资格可再试。没有 Draft 的正文失败不产生 failed 内容阶段。
 
 Draft 已成功生成后，Analyzer 失败保留 compiled；显示失败且允许 Human Review。单独或批量重分析失败任务不重生成正文。正常审阅入口在分析尝试结束后开放，不能把尚在运行误显示成已结束的失败。
+
+提供独立 Retry Review／Retry Relation 按钮，用户选择哪项就运行哪项，已有成功结果也可明确重试；不自动连带运行另一项或 Compiler。请求按当前输入／配置核验并冻结，其他结果保留其来源和版本；材料改变不强制重跑两项。Relation 只按配置复用同分析上下文内仍有效的 Review 材料或输出，没有合法输出就独立执行，不借不相关旧轮结果填缺口。
+
+D 提前补最小 Recompile 动作及计数：反馈追加 Annotation、返回 pending、保留旧 Draft，不立即执行模型。每个成功接受的新用户 Recompile 请求计数一次，相同请求重放不重复计数；再次 Run Compiler 和模型自动重试独立记录，不计作 Recompile。其他 Review Note 动作和完整差异／恢复仍按 E／F 范围推进。
+
+Core 完整轮次、时间／间隔调度、有限重试、独立／批量指定 Analyzer 和最小 Recompile 的已实现接口见 [Processing 合同](../engramweave/docs/processing.md)。当前阶段不执行 reviewed 的 Planner，只记录跳过原因；其他阶段不自动回退。最小反馈和原生 MVP 不等同于完整 E／F 或 P3。
 
 ## 5. 客户端职责和人工动作
 
