@@ -42,7 +42,7 @@ _避免_：用未限定的 Review 指代 Review Analyzer。
 
 **分析模板（Analysis Template）**：面向某类材料或分析目的的一组分析要求及上下文需求。它不等同于待分析材料本身。
 
-**Analysis Profile**：组合 Review/Relation 分析模板、模型和执行路径的一套分析方案。
+**Analysis Profile**：组合 Review/Relation 分析模板、模型、执行路径及上下文／输出复用偏好的一套分析方案。
 
 **Source Annotation**：用户围绕 Source 长期保留的认知上下文，包括保存理由、理解、疑问和后续整理指令。它可以与投递原文一起被整理进 Draft，不要求在正文中单独标示为用户判断。
 

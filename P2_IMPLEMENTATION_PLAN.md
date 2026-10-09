@@ -52,6 +52,8 @@ Review Analyzer 可针对知识理解、条件遗漏、原意或学术 Claim／�
 
 两项 Analyzer 绑定本轮相同 Source／Draft 输入，分别获得模板需要的上下文。Relation 三档复用：Review 全输入上下文；仅输出参考；上下文及输出均不复用。这里的 Review 指 AI Review Analyzer，不是之后的 Human Review。
 
+是否参考本轮 Review 输出由用户在设置中按偏好选择，不是 Relation 的必需依赖。没有合法输出时直接独立执行 Relation，使用自己的输入和上下文；Review 自身失败按原机制处理，不增加提示或特殊降级状态，不引用旧轮输出替代。
+
 ### 3.3 基本语义召回
 
 扩展 P1 的上下文读取和查找范围，覆盖 Knowledge、Ideas、Research，并具备基本语义召回。允许有界候选和有限覆盖，但不能将旧计划的 Knowledge-only、最多五份或仅关键词规则作为已确认合同。
