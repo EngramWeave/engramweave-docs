@@ -54,11 +54,11 @@
 - [x] Zotero 投递明确选择段落／高亮／批注，一次独立 Source；Windows Zotero 10.0.x PDF 入口，Core API 保存，失败保留冻结请求供明确重试。
 - [x] 保留论文和位置链接、分析预设；不投其他材料、不同步后续修改。仅评论投递保留 Annotation，不伪造论文正文。
 - [x] 原生 Obsidian 编辑与侧边栏 Source Annotation／AI 分析／关系建议。
-- [ ] Review Note 新建灵感，正确回链 Source 和 Draft。
+- [x] Review Note 新建灵感，正确回链 Source 和 Draft。
 - [x] Recompile 追加 Annotation、返回 pending，不立即执行模型；最小动作由 D 提供，E 完整 Review Note 集成继续复用。
-- [ ] Review Complete 保存当前 Draft 自己的 Intent、返回 reviewed；规划前可直接切换所选 Draft，其他 Draft／Intent 保留，无精确正文绑定。
-- [ ] 规划未开始时取消 Review Complete 返回 compiled。
-- [ ] 动作正确消费／清空输入；按 Draft 保留会话内未提交文字，送达不明请求以临时恢复记录和原 ID 查明，断线和重试不丢输入或重复追加。
+- [x] Review Complete 保存当前 Draft 自己的 Intent、返回 reviewed；AI 分析可跳过，不要求 Analyzer 尝试；规划前可直接切换所选 Draft，其他 Draft／Intent 保留，无精确正文绑定。
+- [x] 规划未开始时取消 Review Complete 返回 compiled。
+- [x] 动作正确消费／清空输入；按 Draft 保留会话内未提交文字，送达不明请求以临时恢复记录和原 ID 查明，断线和重试不丢输入或重复追加。
 
 ## F：编辑保护、文档与 P2-G
 

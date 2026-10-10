@@ -4,7 +4,7 @@ This document clarifies the product semantics of the [overall design v0.4](ä¸ªäº
 
 ## Compilation scope
 
-- Knowledge Compiler is the complete pre-human workflow: Compiler creates the body, then Draft Analyzer runs Review Analyzer and Relation Analyzer. Human Review starts after this workflow completes; Review Analyzer is AI analysis, not human approval.
+- Knowledge Compiler normally creates the body and then runs Draft Analyzer's Review and Relation tasks. AI analysis is optional reference for Human Review: an existing compiled Draft can be manually confirmed without any Analyzer attempt. Review Analyzer is AI analysis, not human approval.
 - Users submit material they have already judged worth preserving. Compiler denoises and lightly refines it while respecting its content; it does not discover additional knowledge in unsubmitted material.
 - Paper submissions consist primarily of selected passages, highlights, and comments. Full text may provide reference context but does not expand the material to be compiled.
 - Source in this workflow primarily denotes the Source Record with Properties. An unarchived Source Record may have multiple Drafts. Only one Draft is selected for final integration; after successful archival, all related Drafts are marked discarded. Recompile preserves existing Drafts and user edits. Integration Planner may integrate that one candidate into multiple formal files, all referencing the same Source Record.
@@ -120,7 +120,7 @@ See [the status ownership decision](docs/adr/0005-source-processing-stage-and-co
 
 Body compilation returns title and body. Desktop explicitly permits active pending or compiled Sources to run Compiler again, creating another Draft without changing the independent Recompile action. A failed repeat run retains the compiled stage. Draft retains the original captured_at and annotation property values. Compiler instructions are user-editable under 90_System/Prompts/Compiler.md and are frozen when a request is accepted. Draft Analyzer is Core orchestration of two independent sub-tasks, Review Analyzer followed by Relation Analyzer. Each has selectable analysis templates, models, and execution paths, stores its result separately, and is bound to the same Source and Draft version. All analysis outputs belong only in the sidebar and cannot modify body content.
 
-The ordinary workflow exposes Human Review after the compilation/analysis round, with analysis failures shown when allowed. Human edits are not a normal interleaving between Review Analyzer and Relation Analyzer. Concurrent external file changes still require version checks rather than silent overwrites.
+The ordinary workflow exposes Human Review after the compilation/analysis round, with analysis failures shown. Users may also skip AI analysis and manually confirm an existing compiled Draft; Review Complete requires no Analyzer attempt or result. An actively running round still owns its inputs and excludes competing mutations. Concurrent external file changes require version checks rather than silent overwrites.
 
 | Analysis input | Purpose |
 |---|---|
@@ -154,7 +154,7 @@ See [the unified integration decision](docs/adr/0012-unified-knowledge-reorganiz
 
 ## User-controlled review and planning
 
-- Review Complete changes `compiled` to `reviewed` and permits planning. It does not bind approval to an exact Draft version. Draft remains editable; edits do not automatically revoke review, trigger replanning, or invalidate a generated ChangeSet.
+- Review Complete changes `compiled` to `reviewed` and permits planning, independently of optional AI analysis. No Analyzer attempt or result is required. It does not bind approval to an exact Draft version. Draft remains editable; edits do not automatically revoke review, trigger replanning, or invalidate a generated ChangeSet.
 - A Source awaiting planning has one currently selected Reviewed Draft. Before planning starts, explicitly completing review of another related Draft switches that selection and saves the submitted Integration Intent for that Draft. The earlier Draft, its own Intent and all other Draft files remain intact; no preliminary cancel or additional approval is required. Source stage alone does not identify which related Draft is selected. This selection change does not alter inputs already frozen by a later planning round.
 - Integration Intent belongs to its individual Draft, not to a shared Source-level slot or a previous/next-Draft history. Canceling Review Complete or requesting Recompile withdraws planning permission without deleting, moving or replacing any Draft's Intent. A new Draft does not inherit another Draft's Intent. Selecting a Draft for planning and retaining that Draft's own Intent are separate responsibilities.
 - Before Planner starts, users may cancel Review Complete to return `reviewed` to `compiled`. Once a ChangeSet exists, canceling Review Complete cancels that unapproved candidate and returns `planned` to `compiled`; users can edit and confirm again to request a new plan.
@@ -172,6 +172,8 @@ See [the Draft-owned Intent decision](docs/adr/0016-draft-owned-integration-inte
 Obsidian uses one Review Note input whose explicit action routes the text to an Idea, Source Annotation through Recompile, or the current Draft's Integration Intent through Review Complete. Only one action consumes an input, and confirmed success clears the corresponding text; ordinary editing and opening the sidebar do not invoke models. Cancel Review Complete does not consume this input.
 
 Unsubmitted text is retained separately for each Draft within the current plugin session, including file switches and closing/reopening the sidebar. It is not persisted across plugin unload, restart or application exit. A sent operation with uncertain delivery separately retains a temporary recovery record and its original request ID until the outcome is known; this is pending-operation recovery, not a permanent Review Note asset or automatic replay queue.
+
+Core persists accepted Human Review input and revoked selections outside the rebuildable SQLite projection. Idea is an ordinary Vault file; each Draft's Intent remains Core-owned workflow content and must be included in application-data backups. Source or selected Draft discard, Recompile and MVP archival withdraw the current selection without erasing those Intents; Restore and completed old-request replay do not grant permission again. See [the component contract](../engramweave/docs/human-review.md) for interfaces and recovery boundaries.
 
 ## Obsidian MVP direct publication
 

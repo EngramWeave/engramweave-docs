@@ -23,10 +23,10 @@ _避免_：论文自动总结器、全文知识发现器。
 
 **Derived Representation**：围绕 Source 或 Asset 生成、可以重新生成的机器表示。它辅助理解和检索，但不能替代原始材料。
 
-**Human Review**：Knowledge Compiler 整体完成后，用户阅读、编辑并确认 Draft 正文的阶段。它与 AI 执行的 Review Analyzer 是不同概念。
+**Human Review**：Draft 正文生成后，用户阅读、编辑并确认正文的阶段；AI 分析是可选参考。它与 AI 执行的 Review Analyzer 是不同概念。
 _避免_：用未限定的 Review 指代 Review Analyzer。
 
-**Review Complete**：用户允许一份 Draft 进入整合规划的确认动作。它不冻结 Draft 正文，也不代表已经批准正式知识修改。
+**Review Complete**：用户允许一份 Draft 进入整合规划的确认动作，不以 AI 分析为前提。它不冻结 Draft 正文，也不代表已经批准正式知识修改。
 
 **Reviewed Draft**：用户已允许进入整合规划、仍可继续编辑的 Draft；它不是某个不可变正文版本的名称。
 
