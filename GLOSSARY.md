@@ -30,6 +30,11 @@ _避免_：用未限定的 Review 指代 Review Analyzer。
 
 **Reviewed Draft**：用户已允许进入整合规划、仍可继续编辑的 Draft；它不是某个不可变正文版本的名称。
 
+**Review Note**：用户审阅 Draft 时，为一次明确动作填写的临时输入；由新建灵感、Recompile 或 Review Complete 中的一个动作消费。
+
+**Integration Intent**：用户随 Review Complete 提交、表达所选 Draft 应如何整合进知识库的意图，作为 Integration Planner 的输入。
+_避免_：AI Integration Suggestions、Source Annotation、尚未提交的 Review Note。
+
 **Review Metadata**：AI 在处理过程中提出的不确定性、潜在错误、待验证 Claim、关系和整合建议等审阅辅助信息。它们属于 Control Plane，不是 Draft 正文或用户已经认可的知识。
 
 **Draft Analyzer**：围绕待入库 Draft 生成侧边栏分析的整体能力，由 Review Analyzer 和 Relation Analyzer 两个独立子任务组成。它不修改 Draft 正文。
