@@ -1,7 +1,7 @@
 # P2：论文投递、编译与人工审阅实施计划
 
 > 基线：[总体设计 v0.4](个人知识编译系统总体设计方案_v0.4.md)、[CONTEXT.md](CONTEXT.md)、[IMPLEMENTATION_PLAN.md](IMPLEMENTATION_PLAN.md)。
-> 更新日期：2026-10-09。P1 已完成；本阶段扩展现有合同，不重新验收 P1。
+> 更新日期：2026-10-10。P1 已完成；本阶段扩展现有合同，不重新验收 P1。
 > 执行清单：[P2_TODO.md](P2_TODO.md)。首个实用闭环由 P2 和 P3 共同完成。
 
 ## 1. 阶段范围
@@ -22,7 +22,7 @@ P2 建立真实 Zotero 选段投递与普通网页／手动内容共用的编译
 - Markdown 正文是逻辑 Source Asset，可与 Record Properties 同文件；独立受管理 Asset 为 Record 专属，外部 Zotero Asset 仍由 Zotero 管理。
 - Compiler 整理 Source 内容和 Annotation 中投递的用户理解，不标注来源事实／用户判断。全文上下文不扩大投递范围，正文不加入额外模型分析。
 - 一个未 archived 的 Record 可以有多份 Draft；最终只有一份 Draft 用于正式入库，入库成功后所有相关 Draft 标记 discarded。Recompile 保留已有 Draft、用户修改及版本。P3 可能将一份 Draft 融入多份正式文件。
-- Draft 与用户修改不能因数据库损坏丢失。Draft 不进 Git，重编译的 diff／恢复需有自身文件保留能力；无需绑定 Review Complete 的精确正文版本。
+- Draft 与用户修改不能因数据库损坏丢失。Draft 不进 Git，各稿独立保留；Recompile 后续新增另一份 Draft，不覆盖旧稿。P2 不要求 Draft 之间的 diff、独立 revision 链或 rollback 界面；保留能力由现有独立 Draft 文件提供，F 验证数据库／操作中断恢复。无需绑定 Review Complete 的精确正文版本。
 - Recompile 的后续轮次可以生成另一份 Draft；既有用户编辑必须保持可恢复，不增加正文替换审批点（总体设计 §8.2、§8.3）。
 
 ### 2.2 四类状态
@@ -89,7 +89,7 @@ Draft 已成功生成后，AI 分析是可选参考，Review Complete 不要求 
 
 提供独立 Retry Review／Retry Relation 按钮，用户选择哪项就运行哪项，已有成功结果也可明确重试；不自动连带运行另一项或 Compiler。请求按当前输入／配置核验并冻结，其他结果保留其来源和版本；材料改变不强制重跑两项。Relation 只按配置复用同分析上下文内仍有效的 Review 材料或输出，没有合法输出就独立执行，不借不相关旧轮结果填缺口。
 
-D 提前补最小 Recompile 动作及计数：反馈追加 Annotation、返回 pending、保留旧 Draft，不立即执行模型。每个成功接受的新用户 Recompile 请求计数一次，相同请求重放不重复计数；再次 Run Compiler 和模型自动重试独立记录，不计作 Recompile。其他 Review Note 动作和完整差异／恢复仍按 E／F 范围推进。
+D 提前补最小 Recompile 动作及计数：反馈追加 Annotation、返回 pending、保留旧 Draft，不立即执行模型。每个成功接受的新用户 Recompile 请求计数一次，相同请求重放不重复计数；再次 Run Compiler 和模型自动重试独立记录，不计作 Recompile。完整 Review Note 动作由 E2 提供，F 核对资产保留与数据库／操作中断恢复，不新增 Draft diff。
 
 Core 完整轮次、时间／间隔调度、有限重试、独立／批量指定 Analyzer 和最小 Recompile 的已实现接口见 [Processing 合同](../engramweave/docs/processing.md)。当前阶段不执行 reviewed 的 Planner，只记录跳过原因；其他阶段不自动回退。最小反馈和原生 MVP 不等同于完整 E／F 或 P3。
 
@@ -131,7 +131,7 @@ Integration Intent 归属于各自 Draft，Source 的当前规划选择与 Inten
 | C 召回和分析 | 三类语义上下文、两项 Analyzer、Profile 与复用 | B；同轮输入、独立结果、双路径。 |
 | D 调度与状态 | 具体时间／间隔、手动轮次、有限重试和重分析 | A–C；不重复正文生成、不补跑。 |
 | E Capture 和 Review | Zotero 选定材料、Obsidian 侧边栏及三动作 | 对应 Core 合同可用后可并行；不复制业务逻辑。 |
-| F 编辑保护与验收 | Recompile／diff／恢复、真实场景、文档 | B–E；满足 P2-G，交给 P3。 |
+| F 资产保护与验收 | 既有独立 Draft 保留回归、数据库／操作恢复、真实场景、文档 | B–E；满足 P2-G，交给 P3。 |
 
 ## 7. 验证与交付
 

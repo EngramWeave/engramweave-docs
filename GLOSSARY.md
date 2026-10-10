@@ -15,7 +15,7 @@
 **Compiler**：Knowledge Compiler 中负责对投递内容去噪、适度提炼并尊重原意、生成标题和正文的过程。
 _避免_：论文自动总结器、全文知识发现器。
 
-**Draft**：由投递内容编译而成、可编辑且等待人工审阅的知识候选；一个未 archived 的 Source 可以有多份 Draft，最终只有一份用于正式入库。入库成功后，该 Source 的所有相关 Draft 标记 discarded。
+**Draft**：由投递内容编译而成、可编辑且等待人工审阅的知识候选；一个未 archived 的 Source 可以有多份独立保留的 Draft，最终只有一份用于正式入库。入库成功后，该 Source 的所有相关 Draft 标记 discarded。
 
 **Source Record**：带 Properties 的用户可读来源记录，保存一次投递的材料描述、原材料引用及认知上下文。工作流中的 Source 主要指这一记录，不等同于所引用的整篇论文。
 

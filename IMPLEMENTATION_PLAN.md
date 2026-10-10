@@ -64,7 +64,7 @@ M1 是已完成的 P1 基础；M2 是 P3 完成后的首个实用版本；M3 是
 3. 为 Knowledge、Ideas、Research 提供基本语义召回和引用上下文，供 Analyzer 及后续 Planner 使用。
 4. 打通 Compiler → Review Analyzer → Relation Analyzer；按配置定时／手动轮次执行，提供失败可见性和单独重分析。
 5. 在 Source 投递与预设选择合同稳定后接入 Zotero 选定材料投递，同时实现 Obsidian 侧边栏、原生审阅和 Review Note 动作。
-6. 验证用户编辑后 Recompile 的保留、差异和恢复能力；完成真实论文／网页材料的审阅检查点。
+6. 验证用户编辑后 Recompile 的独立 Draft 保留，以及数据库损坏／操作中断后的资产恢复；不要求 Draft 之间的 diff 或独立 rollback 界面。完成真实论文／网页材料的审阅检查点。
 
 ### 3.2 P2-G 验收
 
