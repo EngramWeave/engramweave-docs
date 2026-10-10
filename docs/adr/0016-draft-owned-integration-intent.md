@@ -1,0 +1,3 @@
+# Integration Intent belongs to each Draft
+
+A Source can have several Drafts while permitting only one current Draft to enter planning, so Integration Intent belongs independently to each Draft rather than occupying one shared Source-level slot. Explicitly selecting another Reviewed Draft before planning starts saves that Draft's submitted Intent and retains every other Draft's own Intent; canceling review or requesting Recompile withdraws permission without erasing or transferring those contents. This separates the user's per-Draft integration instructions from the current planning selection, avoiding accidental replacement and unnecessary previous/next-Intent history.

@@ -120,6 +120,8 @@ E1 的首批适配范围为 Windows Zotero 10.0.x PDF 阅读器，使用 Core AP
 
 Review Note 每次被一个动作消费，成功消费后清空，不单独永久存储，也不插入 Draft 正文。要保留的 Integration Intent／Annotation／Idea 按各自语义保存。客户端断线或响应丢失不能丢输入或重复追加。
 
+Integration Intent 归属于各自 Draft，Source 的当前规划选择与 Intent 内容分别维护。规划开始前对另一份 Draft 执行 Review Complete 可直接切换选择并保存该 Draft 的本次 Intent，其他 Draft 及其 Intent 保留；取消或 Recompile 撤销许可，不删除或转移这些内容，新 Draft 不继承其他 Draft 的 Intent。Obsidian 未提交的 Review Note 按 Draft 在当前插件会话内保留，文件切换和关开侧边栏不丢；插件重载／退出不保存未提交文字。已发送但送达不明的动作另留临时恢复记录和原请求 ID，查明结果后清理。见 Context 与 ADR-0016。
+
 ## 6. 实施切片与依赖
 
 | 切片 | 内容 | 依赖与检查点 |

@@ -32,7 +32,7 @@ _避免_：用未限定的 Review 指代 Review Analyzer。
 
 **Review Note**：用户审阅 Draft 时，为一次明确动作填写的临时输入；由新建灵感、Recompile 或 Review Complete 中的一个动作消费。
 
-**Integration Intent**：用户随 Review Complete 提交、表达所选 Draft 应如何整合进知识库的意图，作为 Integration Planner 的输入。
+**Integration Intent**：用户随 Review Complete 提交、表达一份 Draft 应如何整合进知识库的意图，归属于该 Draft，作为 Integration Planner 的输入。不同 Draft 各自拥有自己的 Integration Intent。
 _避免_：AI Integration Suggestions、Source Annotation、尚未提交的 Review Note。
 
 **Review Metadata**：AI 在处理过程中提出的不确定性、潜在错误、待验证 Claim、关系和整合建议等审阅辅助信息。它们属于 Control Plane，不是 Draft 正文或用户已经认可的知识。

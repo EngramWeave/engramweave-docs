@@ -155,7 +155,8 @@ See [the unified integration decision](docs/adr/0012-unified-knowledge-reorganiz
 ## User-controlled review and planning
 
 - Review Complete changes `compiled` to `reviewed` and permits planning. It does not bind approval to an exact Draft version. Draft remains editable; edits do not automatically revoke review, trigger replanning, or invalidate a generated ChangeSet.
-- A Source awaiting planning has one currently selected Reviewed Draft. Before planning starts, explicitly completing review of another related Draft switches that selection and uses the new operation's Integration Intent. The earlier Draft and all other Draft files remain intact; no preliminary cancel or additional approval is required. Source stage alone does not identify which related Draft is selected. This selection change does not alter inputs already frozen by a later planning round.
+- A Source awaiting planning has one currently selected Reviewed Draft. Before planning starts, explicitly completing review of another related Draft switches that selection and saves the submitted Integration Intent for that Draft. The earlier Draft, its own Intent and all other Draft files remain intact; no preliminary cancel or additional approval is required. Source stage alone does not identify which related Draft is selected. This selection change does not alter inputs already frozen by a later planning round.
+- Integration Intent belongs to its individual Draft, not to a shared Source-level slot or a previous/next-Draft history. Canceling Review Complete or requesting Recompile withdraws planning permission without deleting, moving or replacing any Draft's Intent. A new Draft does not inherit another Draft's Intent. Selecting a Draft for planning and retaining that Draft's own Intent are separate responsibilities.
 - Before Planner starts, users may cancel Review Complete to return `reviewed` to `compiled`. Once a ChangeSet exists, canceling Review Complete cancels that unapproved candidate and returns `planned` to `compiled`; users can edit and confirm again to request a new plan.
 - Later Draft edits do not change the inputs of a running planning round or the contents of an existing candidate. No real-time Draft watcher or persistent review-version binding is required by this workflow.
 - During ChangeSet review, users compare candidate file contents against current local files and choose or edit both sides to form the final approved contents. Rejecting a candidate and requesting replanning makes Planner read current local content again.
@@ -163,6 +164,14 @@ See [the unified integration decision](docs/adr/0012-unified-knowledge-reorganiz
 - If a canceled or missing ChangeSet leaves a Source at `planned`, return it to `reviewed` when the reviewed Draft remains usable and wait for a new planning round. A new candidate requires new approval. Recovery after approved execution has begun is an implementation responsibility, not another user confirmation workflow.
 
 See [the review and planning decision](docs/adr/0010-user-controlled-review-and-planning.md).
+
+See [the Draft-owned Intent decision](docs/adr/0016-draft-owned-integration-intent.md).
+
+## Review Note routing and input lifetime
+
+Obsidian uses one Review Note input whose explicit action routes the text to an Idea, Source Annotation through Recompile, or the current Draft's Integration Intent through Review Complete. Only one action consumes an input, and confirmed success clears the corresponding text; ordinary editing and opening the sidebar do not invoke models. Cancel Review Complete does not consume this input.
+
+Unsubmitted text is retained separately for each Draft within the current plugin session, including file switches and closing/reopening the sidebar. It is not persisted across plugin unload, restart or application exit. A sent operation with uncertain delivery separately retains a temporary recovery record and its original request ID until the outcome is known; this is pending-operation recovery, not a permanent Review Note asset or automatic replay queue.
 
 ## Obsidian MVP direct publication
 

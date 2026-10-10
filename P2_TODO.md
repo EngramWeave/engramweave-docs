@@ -56,9 +56,9 @@
 - [x] 原生 Obsidian 编辑与侧边栏 Source Annotation／AI 分析／关系建议。
 - [ ] Review Note 新建灵感，正确回链 Source 和 Draft。
 - [x] Recompile 追加 Annotation、返回 pending，不立即执行模型；最小动作由 D 提供，E 完整 Review Note 集成继续复用。
-- [ ] Review Complete 保存 Intent、返回 reviewed，无精确正文绑定。
+- [ ] Review Complete 保存当前 Draft 自己的 Intent、返回 reviewed；规划前可直接切换所选 Draft，其他 Draft／Intent 保留，无精确正文绑定。
 - [ ] 规划未开始时取消 Review Complete 返回 compiled。
-- [ ] 动作正确消费／清空输入，断线和重试不丢输入或重复追加。
+- [ ] 动作正确消费／清空输入；按 Draft 保留会话内未提交文字，送达不明请求以临时恢复记录和原 ID 查明，断线和重试不丢输入或重复追加。
 
 ## F：编辑保护、文档与 P2-G
 
