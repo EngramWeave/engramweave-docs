@@ -101,6 +101,8 @@ Core 完整轮次、时间／间隔调度、有限重试、独立／批量指定
 
 插件只承担采集和必要反馈，不承担 Compiler、关系分析或整合逻辑。可复用两类 Capture 入口；实现路径根据真实 Zotero 能力决定，不建设文献管理器。
 
+E1 的首批适配范围为 Windows Zotero 10.0.x PDF 阅读器，使用 Core API 保存 inline `source_type: paper`；评论保留在 Annotation，支持仅评论的投递。失败保留当前窗口冻结请求，明确重试或复制 Markdown，不添加离线后台队列。EPUB、OCR、全文提取和跨论文聚合不在首批范围。组件安装、选择和重试边界见 [Zotero README](../engramweave-zotero/README.md) 与 [Context](../engramweave-zotero/CONTEXT.md)。
+
 ### 5.2 Desktop
 
 配置执行路径、模型、模板、Profile、调度与有限重试；显示 Source 阶段、生命周期、Job、Draft、分析失败。支持选定批处理、待编译筛选、重编译计数筛选和失败 Analyzer 的批量重分析。Desktop 不重建正文编辑器。

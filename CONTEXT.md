@@ -48,7 +48,7 @@ The initial semantic index is built only through an explicit Build Semantic Inde
 
 ## Zotero capture and Source independence
 
-- The planned Zotero plugin lets users explicitly select passages or a group of highlights and comments and submit them to EngramWeave. One operation creates one Source with paper and location references. Other highlights and full text are not automatically submitted.
+- The Zotero plugin lets users explicitly select passages or a group of highlights and comments and submit them to EngramWeave. One operation creates one Source with paper and location references. Other highlights and full text are not automatically submitted. A comment-only submission retains Annotation without inventing paper body text.
 - A submitted Source is independent of later Zotero highlight or comment edits. Its connection to the original material is the locator link, not synchronization.
 - Users submit new material as a new Source. Old Sources remain unchanged unless users explicitly edit or delete them.
 - Component-specific semantics are maintained in [the Zotero context](../engramweave-zotero/CONTEXT.md).

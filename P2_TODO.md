@@ -51,8 +51,8 @@
 
 - [x] Obsidian MVP：现有 Source→Compiler→Analyzer、原生 Draft 编辑、侧边栏结果及直接入库 `40_Knowledge`，保留 Source 和 Draft、可恢复归档。
 
-- [ ] Zotero 投递明确选择段落／高亮／批注，一次独立 Source。
-- [ ] 保留论文和位置链接、分析预设；不投其他材料、不同步后续修改。
+- [x] Zotero 投递明确选择段落／高亮／批注，一次独立 Source；Windows Zotero 10.0.x PDF 入口，Core API 保存，失败保留冻结请求供明确重试。
+- [x] 保留论文和位置链接、分析预设；不投其他材料、不同步后续修改。仅评论投递保留 Annotation，不伪造论文正文。
 - [x] 原生 Obsidian 编辑与侧边栏 Source Annotation／AI 分析／关系建议。
 - [ ] Review Note 新建灵感，正确回链 Source 和 Draft。
 - [x] Recompile 追加 Annotation、返回 pending，不立即执行模型；最小动作由 D 提供，E 完整 Review Note 集成继续复用。
