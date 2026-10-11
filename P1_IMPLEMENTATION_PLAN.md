@@ -6,6 +6,8 @@
 > 上位依据：[总体设计 v0.4](个人知识编译系统总体设计方案_v0.4.md)、[IMPLEMENTATION_PLAN.md](IMPLEMENTATION_PLAN.md) P1、[TODO.md](TODO.md) P1。  
 > Coding Agent 清单：[P1_TODO.md](P1_TODO.md)。
 
+P2 后续性能扩展已将日常 Refresh 改为 Core 监听辅助的增量核对；本文的“每次全量读取”仅描述 P1 历史合同，当前行为以 [ADR-0017](docs/adr/0017-core-owned-incremental-refresh.md)及[组件增量合同](../engramweave/docs/incremental-refresh.md)为准。P1 验收保持完成状态。
+
 ## 1. 设计结论与事实基线
 
 P1 交付一个**单 Vault、单 Core 进程、显式扫描、文件为真相源**的本地系统。先通过独立 Core 完成“采集文件 → 登记 → 查看 → 搜索”，再让 Desktop 管理同一个 Core。SQLite 保存文件的可重建投影和当前扫描任务，不保存独占的用户知识。

@@ -28,6 +28,8 @@ Embedding configuration is independent of Compiler configuration. Local services
 
 The initial semantic index is built only through an explicit Build Semantic Index action after Embedding configuration. Once initialized, Refresh Workspace first completes local registration, then updates embeddings only for new or changed notes. Startup and ordinary editing never invoke Embedding. Semantic update failure does not invalidate successful registration; semantic failure or stale coverage is reported separately and can be retried. Changing the Embedding model or representation settings requires an explicit compatible rebuild rather than silently mixing vector spaces or automatically replacing the initialized index.
 
+Core collects session-only filesystem change hints independently of Desktop. Explicit Refresh may incrementally reconcile affected registration projections and reference availability; the first Refresh after every Core startup and uncertain or periodic reconciliation use the full scope. Users may explicitly request a full Refresh while retaining valid parsing caches; Rebuild always reconciles fully and reparses. Notifications themselves do not register files or invoke models. Files remain authoritative, untouched projections retain their last actual hash-check timestamps, and every mutation still verifies current bytes and native file identity. See [the incremental Refresh decision](docs/adr/0017-core-owned-incremental-refresh.md) and [the component contract](../engramweave/docs/incremental-refresh.md).
+
 ## Content placement and research
 
 - `40_Knowledge` holds approved, independently useful concepts, principles, and methods.

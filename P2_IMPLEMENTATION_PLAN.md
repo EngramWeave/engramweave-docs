@@ -70,6 +70,8 @@ Embedding 独立配置 endpoint、模型与凭据，本机优先，可使用用�
 
 ## 4. Knowledge Compiler 与处理轮次
 
+本地登记的性能扩展采用 [ADR-0017](docs/adr/0017-core-owned-incremental-refresh.md)：Core 独立记录变化提示，日常显式 Refresh 增量核对受影响文件及引用；首次／重启后、不可靠的监听和周期核对到期回到全量，Rebuild 始终全量。监听不自动登记或调用模型，语义索引更新仍遵守上述首次明确建立和后续编码输入复用规则，详细行为见[组件合同](../engramweave/docs/incremental-refresh.md)。
+
 ```text
 Capture -> Source saved -> Registry
   -> pending batch (scheduled or manual)
