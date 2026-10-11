@@ -109,6 +109,8 @@ See [the status ownership decision](docs/adr/0005-source-processing-stage-and-co
 
 ## Lifecycle discard and Draft cleanup
 
+Refresh, including explicit full reconciliation, retains missing registration alerts. A successful Rebuild reconstructs current file registrations and prunes absent old entries while preserving files, same-path IDs, task history and external receipts; failed enumeration or publication preserves the previous generation. Discard selected on a genuinely missing Source only clears that registration after current absence and root-availability checks, preserving related Drafts and formal notes. Independent Discard Drafts still resolves active Drafts through their file-owned sources links when the Source is absent; selected file revisions remain mandatory. A restored Source invalidates a missing-record action rather than silently changing its meaning. See [the component contract](../engramweave/docs/sources.md).
+
 - Discard is a reversible, trash-like mark. Desktop can mark selected Sources discarded and let users filter discarded files for batch physical deletion.
 - Discarding a Source stops subsequent processing while retaining its material and stage. Users can restore it to active. Users may separately discard explicitly selected active Drafts while keeping the Source and its stage unchanged; this does not physically delete any file.
 - Before archival, discarding a Source also marks all its related Drafts discarded and stops further plan progress. ChangeSet is a temporary execution plan, not a lifecycle-marked file or a generic trash item; cancellation and unresolved execution follow the plan rules below.
