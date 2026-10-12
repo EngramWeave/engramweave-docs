@@ -1,0 +1,3 @@
+# Restore Sources to pending without restoring dependent objects
+
+Explicitly restoring a discarded Source changes only that Source to active/pending, regardless of its former stage, retaining Drafts, formal content and Draft-owned Intents without reactivation and never restoring review selection or a canceled ChangeSet. We prefer a fresh eligible processing round over reconstructing a stage-specific chain of canceled temporary plans, keeping the lifecycle operation simple and avoiding a planned Source without a valid plan. Restore itself does not run inference; subsequent manual or enabled scheduled processing uses normal pending eligibility, while incomplete approved execution remains subject to its own recovery contract.

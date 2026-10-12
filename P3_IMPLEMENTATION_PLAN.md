@@ -1,7 +1,7 @@
 # P3：Agent 驱动整合、Vault 候选审查与批准执行
 
 > 基线：[总体设计 v0.4](个人知识编译系统总体设计方案_v0.4.md)、[CONTEXT.md](CONTEXT.md)、[总体计划](IMPLEMENTATION_PLAN.md)。
-> 阶段状态：待实现；P1、P2 开发已完成。更新日期：2026-10-12。
+> 阶段状态：A 开发已完成，B–D 待实现；P1、P2 开发已完成。更新日期：2026-10-12。
 > 配套清单：[P3_TODO.md](P3_TODO.md)；范围决定：[ADR-0019](docs/adr/0019-agent-first-delivery-and-core-tools.md)、[ADR-0020](docs/adr/0020-vault-local-changeset-review.md)。
 
 ## 1. 目标与边界
@@ -33,7 +33,7 @@
 
 ## 3. A：Agent 工具与候选工作区
 
-详细施工顺序、代码复用与 A-G 验收见 [A 计划](P3_A_IMPLEMENTATION_PLAN.md) 和 [A TODO](P3_A_TODO.md)。A 包含候选编辑器验证及实际候选读写，B 完成最终审查／批准；制定计划不代表 A 已实现。
+详细施工顺序、代码复用与 A-G 验收见 [A 计划](.local/P3/P3_A_IMPLEMENTATION_PLAN.md) 和 [A TODO](.local/P3/P3_A_TODO.md)。A 包含候选编辑器验证及实际候选读写，B 完成最终审查／批准；A 的候选、Agent Planner 与 reviewed 分流已实现；B–D 尚未完成。
 
 ### 3.1 先验证审查体验
 

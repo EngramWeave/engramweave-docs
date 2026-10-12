@@ -39,11 +39,11 @@
 
 当前任务见 [P3_TODO.md](P3_TODO.md)，合同见 [P3_IMPLEMENTATION_PLAN.md](P3_IMPLEMENTATION_PLAN.md)。
 
-- [ ] 优先完善 Agent 接入和 Core Tools／MCP，复用 Codex loop；Integration Planner 根据当前输入统一规划，不要求同期新增模型 API 路径。
-- [ ] Core 按任务限制读取、检索和本轮候选写入权限，Agent 无正式写入／批准／执行能力。
-- [ ] `70_ChangeSets` 保存临时 manifest 与候选，排除 Git、正式登记与召回，不建 Base 目录。
-- [ ] 一个候选 ChangeSet 支持完整重组结果，不分四种独立业务模式。
-- [ ] Obsidian CodeMirror 6 MergeView：Current 只读，Candidate 编辑／保存；刷新当前文件保留候选，可取舍／拒绝／重规划／批准。
+- [x] 优先完善 Agent 接入和 Core Tools／MCP，复用 Codex loop；Integration Planner 根据当前输入统一规划，不要求同期新增模型 API 路径。
+- [x] Core 按任务限制读取、检索和本轮候选写入权限，Agent 无正式写入／批准／执行能力。
+- [x] `70_ChangeSets` 保存临时 manifest 与候选，排除 Git、正式登记与召回，不建 Base 目录。
+- [x] 一个候选 ChangeSet 支持完整重组结果，不分四种独立业务模式。
+- [ ] Obsidian CodeMirror 6 MergeView：Current 只读，Candidate 编辑／保存；刷新当前文件保留候选（A 已实现）；完整影响取舍／拒绝／重规划／批准待 B。
 - [ ] 未批准候选不写正式文件；批准后立即由 Executor 应用最终内容；快捷新建共用执行／归档／恢复，不强制调用 Planner。
 - [ ] 前置条件、异常中断、归档属性、避免重复应用和 Git 失败恢复。
 - [ ] Knowledge／Research 按用途整合，来源回链、关系及目录调整受批准控制。
