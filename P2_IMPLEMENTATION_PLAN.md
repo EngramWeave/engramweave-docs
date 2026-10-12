@@ -1,8 +1,10 @@
 # P2：论文投递、编译与人工审阅实施计划
 
 > 基线：[总体设计 v0.4](个人知识编译系统总体设计方案_v0.4.md)、[CONTEXT.md](CONTEXT.md)、[IMPLEMENTATION_PLAN.md](IMPLEMENTATION_PLAN.md)。
-> 更新日期：2026-10-10。P1 已完成；本阶段扩展现有合同，不重新验收 P1。
+> 更新日期：2026-10-11。P1、P2 开发已完成；本文保留 P2 实施合同，当前施工见 [P3 计划](P3_IMPLEMENTATION_PLAN.md)。
 > 执行清单：[P2_TODO.md](P2_TODO.md)。首个实用闭环由 P2 和 P3 共同完成。
+
+本文保留 P2 双路径的已交付范围。当前 P3 优先 Agent 与 Core Tools／MCP，保留已有模型 API、暂缓其扩展；不将历史双路径要求视为新增 Planner API 的前置条件。见 [ADR-0019](docs/adr/0019-agent-first-delivery-and-core-tools.md)。
 
 ## 1. 阶段范围
 
@@ -143,7 +145,7 @@ Integration Intent 归属于各自 Draft，Source 的当前规划选择与 Inten
 
 数据库重建不丢用户文件、Intent 和阶段；模型输出合法不代表忠实度通过，正文及分析质量需人工核验。测试、现场输出、临时证据放 .local/p2/；稳定文档记录合同及复现方法。
 
-交付物为 Core 编译／分析／状态／召回／调度能力、Desktop 必要配置和管理、Zotero Capture 插件、Obsidian Review 侧边栏、可恢复 Draft 与 Integration Intent，以及满足整体计划 P2-G 的验证。正式知识写入留给 P3，不提前宣布实用闭环完成。
+交付物为 Core 编译／分析／状态／召回／调度能力、Desktop 必要配置和管理、Zotero Capture 插件、Obsidian Review 侧边栏、可恢复 Draft 与 Integration Intent，以及满足整体计划 P2-G 的验证。完整 Planner／ChangeSet 和 Knowledge／Research 重组写入留给 P3；§1.1 的人工 MVP 新建及归档是已获批准的例外，不代表完整 P3 已交付。
 
 ### Sources 展示与显式操作
 

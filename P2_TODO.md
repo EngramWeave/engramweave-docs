@@ -1,9 +1,11 @@
 # P2 实施清单
 
 > 合同：[P2_IMPLEMENTATION_PLAN.md](P2_IMPLEMENTATION_PLAN.md)；上位范围：[IMPLEMENTATION_PLAN.md](IMPLEMENTATION_PLAN.md)。
-> P1 已完成。按切片推进；尚未勾选不表示重做既有基础。
+> P1、P2 开发已完成。本清单保留历史实施合同及人工验收记录，当前施工见 [P3_TODO.md](P3_TODO.md)。
 
 实施时遵守各仓库的 `AGENTS.md`、文档规范以及涉及测试的 `tests/AGENTS.md`，按 A–F 的实际依赖推进。有意义的资产、状态与恢复测试随相关代码交付，不以类型检查替代行为验收。
+
+本文保留 P2 双路径的已交付范围。当前 P3 优先 Agent 与 Core Tools／MCP，保留已有模型 API、暂缓其扩展；不将历史双路径要求视为新增 Planner API 的前置条件。见 [ADR-0019](docs/adr/0019-agent-first-delivery-and-core-tools.md)。
 
 ## A：合同、登记和投影
 
@@ -69,4 +71,5 @@
 - [x] 真实论文／网页／个人理解／三类关联材料与分析失败场景检查；模型格式通过不代表语义质量，正文与建议仍需人工核对。
 - [x] API／Codex 三任务及 Zotero／Obsidian 原生程序化验证；实际鼠标、浏览器扩展弹窗与本人材料另做人工检查。
 - [x] 更新各组件长期合同、Context 和备份恢复说明；临时记录放 .local/p2-f/。未改变架构，不新增 ADR。
-- [ ] 达到整体 P2-G，交付 Reviewed Draft + Intent，不写正式知识或归档。
+- [x] P2 开发及程序化验证完成，交付 Reviewed Draft + 各 Draft 自己的 Intent；正常流程不执行 Planner／ChangeSet，ADR-0015 的人工 MVP 新建／归档例外保留。
+- [ ] 同步实际鼠标操作与本人材料的人工验收记录；程序化验证不代替该记录，已完成检查无需重做开发。

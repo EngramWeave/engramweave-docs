@@ -28,6 +28,8 @@ _避免_：用未限定的 Review 指代 Review Analyzer。
 
 **Review Complete**：用户允许一份 Draft 进入整合规划的确认动作，不以 AI 分析为前提。它不冻结 Draft 正文，也不代表已经批准正式知识修改。
 
+**Publish to Knowledge**：用户明确批准当前 Draft，直接新建一份 Knowledge 笔记的快捷动作；它不是对已有笔记进行自动整合的能力，也不等同于 Review Complete。
+
 **Reviewed Draft**：用户已允许进入整合规划、仍可继续编辑的 Draft；它不是某个不可变正文版本的名称。
 
 **Review Note**：用户审阅 Draft 时，为一次明确动作填写的临时输入；由新建灵感、Recompile 或 Review Complete 中的一个动作消费。
@@ -52,6 +54,10 @@ _避免_：AI Integration Suggestions、Source Annotation、尚未提交的 Revi
 **Source Annotation**：用户围绕 Source 长期保留的认知上下文，包括保存理由、理解、疑问和后续整理指令。它可以与投递原文一起被整理进 Draft，不要求在正文中单独标示为用户判断。
 
 **Integration Planner**：在正文审阅后，根据 Draft、关系分析、用户整合建议与当前知识库，统一规划知识重组并生成候选 ChangeSet 的能力。新建、修改、拆分、融合、重组和废弃是可能的整合结果，不是独立模式或工作流。它不直接执行正式知识修改。
+
+**Current**：审查时目标正式文件的当前本地内容，包含用户最近的编辑；区别于规划时读取的历史内容。
+
+**Candidate**：ChangeSet 中供用户审查和编辑的拟议最终文件内容；保存候选不等于批准或应用正式修改。
 
 **ChangeSet**：一次性、可消费的知识库修改提案及执行计划，供用户审阅批准后执行。它是临时工作流对象，不是正式知识资产或通用回收站中的文件。
 

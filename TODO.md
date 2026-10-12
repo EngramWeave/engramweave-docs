@@ -1,13 +1,13 @@
 # EngramWeave 总体实施清单
 
 > 基线：[总体设计 v0.4](个人知识编译系统总体设计方案_v0.4.md)、[CONTEXT.md](CONTEXT.md)、[IMPLEMENTATION_PLAN.md](IMPLEMENTATION_PLAN.md)。
-> P1 已完成；其后的未勾选项表示尚需实现和验收，不否定既有成果。
+> P1、P2 开发已完成；P3 是当前施工范围。人工验收记录与开发任务分别维护，不把未回填记录解释成重做已完成能力。
 
 ## P0：设计与语义基线维护
 
 - [x] 明确 Source 投递范围、Compiler 与 Draft Analyzer 层级、人工审阅和候选批准边界。
 - [x] 明确状态所有权、Recompile、重试、生命周期和清理规则。
-- [x] 明确统一知识重组、首期语义召回、四任务双路径和 Git 范围。
+- [x] 明确统一知识重组、首期语义召回、独立任务模型和 Git 范围；当前交付优先 Agent，模型 API 新增能力暂缓。
 - [ ] 随实际架构决定维护总体设计、Context、Glossary 与必要 ADR。
 
 ## P1：已完成的本地基础
@@ -20,26 +20,31 @@
 
 详细任务见 [P2_TODO.md](P2_TODO.md)，验收范围见 [P2_IMPLEMENTATION_PLAN.md](P2_IMPLEMENTATION_PLAN.md)。
 
-- [ ] 协调扩展处理阶段、生命周期、登记与 Job 合同；Registry 缺失／空阶段补 pending。
-- [ ] 实现 API 与 Codex 最小执行适配，以及按任务配置模型和路径。
-- [ ] Desktop 配置 Review／Relation 模板、Analysis Profile 和预设选择。
-- [ ] 为 Knowledge、Ideas、Research 建立基本语义召回。
-- [ ] Compiler 根据投递内容及 Annotation 只生成标题／正文。
-- [ ] Core 编排独立 Review Analyzer、Relation Analyzer，结果只进侧边栏。
-- [ ] Relation 三档上下文／结果复用，分析绑定本轮输入。
-- [ ] 定时具体时间／间隔和 Desktop 手动批处理，无启动补跑。
-- [ ] 有限本轮重试、错误历史、单独及批量重分析，失败保留阶段与正文。
-- [ ] Zotero 插件投递明确选择的段落／高亮／批注，保留论文及位置引用和预设。
-- [ ] Obsidian 原生编辑与工作流侧边栏，Review Note 三动作与取消确认。
+- [x] 协调扩展处理阶段、生命周期、登记与 Job 合同；Registry 缺失／空阶段补 pending。
+- [x] 实现 API 与 Codex 最小执行适配，以及按任务配置模型和路径。
+- [x] Desktop 配置 Review／Relation 模板、Analysis Profile 和预设选择。
+- [x] 为 Knowledge、Ideas、Research 建立基本语义召回。
+- [x] Compiler 根据投递内容及 Annotation 只生成标题／正文。
+- [x] Core 编排独立 Review Analyzer、Relation Analyzer，结果只进侧边栏。
+- [x] Relation 三档上下文／结果复用，分析绑定本轮输入。
+- [x] 定时具体时间／间隔和 Desktop 手动批处理，无启动补跑。
+- [x] 有限本轮重试、错误历史、单独及批量重分析，失败保留阶段与正文。
+- [x] Zotero 插件投递明确选择的段落／高亮／批注，保留论文及位置引用和预设。
+- [x] Obsidian 原生编辑与工作流侧边栏，Review Note 三动作与取消确认。
 - [x] Recompile 仅返回 pending，后续新增独立 Draft 并保留旧稿／用户修改；不要求跨稿 diff，数据库／中断恢复由 P2 F 验证。
-- [ ] 完成 P2-G；三类模型任务的 API／Codex 和真实论文场景可用。
+- [x] 交付 Reviewed Draft + 各 Draft 自己的 Intent；三类模型任务的 API／Codex 和真实论文场景已有程序化验证。
+- [ ] 同步 P2-G 真人操作及本人材料的验收记录；已完成检查只需记录，不重复开发。
 
 ## P3：统一整合与首个实用版本
 
-- [ ] Integration Planner 根据当前输入统一规划跨文件知识重组，可选 API／Codex。
+当前任务见 [P3_TODO.md](P3_TODO.md)，合同见 [P3_IMPLEMENTATION_PLAN.md](P3_IMPLEMENTATION_PLAN.md)。
+
+- [ ] 优先完善 Agent 接入和 Core Tools／MCP，复用 Codex loop；Integration Planner 根据当前输入统一规划，不要求同期新增模型 API 路径。
+- [ ] Core 按任务限制读取、检索和本轮候选写入权限，Agent 无正式写入／批准／执行能力。
+- [ ] `70_ChangeSets` 保存临时 manifest 与候选，排除 Git、正式登记与召回，不建 Base 目录。
 - [ ] 一个候选 ChangeSet 支持完整重组结果，不分四种独立业务模式。
-- [ ] 与当前本地文件 Diff，候选编辑／取舍／拒绝／重新规划／批准。
-- [ ] 未批准候选不写正式文件；批准后立即由 Executor 应用最终内容。
+- [ ] Obsidian CodeMirror 6 MergeView：Current 只读，Candidate 编辑／保存；刷新当前文件保留候选，可取舍／拒绝／重规划／批准。
+- [ ] 未批准候选不写正式文件；批准后立即由 Executor 应用最终内容；快捷新建共用执行／归档／恢复，不强制调用 Planner。
 - [ ] 前置条件、异常中断、归档属性、避免重复应用和 Git 失败恢复。
 - [ ] Knowledge／Research 按用途整合，来源回链、关系及目录调整受批准控制。
 - [ ] 入库 Source archived；只自动 discarded 相关 Draft。

@@ -164,7 +164,7 @@ See [the unified integration decision](docs/adr/0012-unified-knowledge-reorganiz
 - Integration Intent belongs to its individual Draft, not to a shared Source-level slot or a previous/next-Draft history. Canceling Review Complete or requesting Recompile withdraws planning permission without deleting, moving or replacing any Draft's Intent. A new Draft does not inherit another Draft's Intent. Selecting a Draft for planning and retaining that Draft's own Intent are separate responsibilities.
 - Before Planner starts, users may cancel Review Complete to return `reviewed` to `compiled`. Once a ChangeSet exists, canceling Review Complete cancels that unapproved candidate and returns `planned` to `compiled`; users can edit and confirm again to request a new plan.
 - Later Draft edits do not change the inputs of a running planning round or the contents of an existing candidate. No real-time Draft watcher or persistent review-version binding is required by this workflow.
-- During ChangeSet review, users compare candidate file contents against current local files and choose or edit both sides to form the final approved contents. Rejecting a candidate and requesting replanning makes Planner read current local content again.
+- During ChangeSet review, users compare candidate file contents against current local files and choose content from both sides and edit only Candidate to form the final approved contents. Rejecting a candidate and requesting replanning makes Planner read current local content again.
 - Generating, inspecting, editing, or rejecting an unapproved candidate does not execute it or modify formal knowledge files. Approval causes Core to apply the final approved contents immediately. A started execution follows that approval independently of later Draft edits; execution checks target-file preconditions.
 - If a canceled or missing ChangeSet leaves a Source at `planned`, return it to `reviewed` when the reviewed Draft remains usable and wait for a new planning round. A new candidate requires new approval. Recovery after approved execution has begun is an implementation responsibility, not another user confirmation workflow.
 
@@ -184,7 +184,15 @@ Core persists accepted Human Review input and revoked selections outside the reb
 
 The early Obsidian MVP provides an explicit human `Publish to Knowledge` action after a Draft Analyzer attempt has ended; failed analysis remains visible and does not prohibit human approval. It creates one new note under `40_Knowledge` from the current user-edited Draft, preserves its Source link, body and other Properties, and refuses to overwrite an existing file. The Draft is retained rather than moved. Only one final Draft may be published for that Source; successful application marks all its related Drafts discarded and records `processing_status: archived` on the Source without changing Source Annotation or material. A file conflict or interrupted application remains recoverable and must not be reported as completed archival.
 
-This MVP supports the current Compiler's one-Source Drafts. It bypasses Integration Planner, Integration Intent and ChangeSet review, while the full Review Complete and planning semantics remain unchanged. It does not merge into existing notes, create Research content, or implement scheduling. Automatic Vault Git commits are explicitly deferred; users manage formal file history with their existing Git tools. Core owns this path independently of Desktop or Obsidian being open. Ordinary editing and startup do not start models. See [the MVP decision](docs/adr/0015-mvp-direct-draft-publication.md).
+This MVP supports the current Compiler's one-Source Drafts. It bypasses Integration Planner, Integration Intent and ChangeSet review, while the full Review Complete and planning semantics remain unchanged. It does not merge into existing notes, create Research content, or implement scheduling. During P2, automatic Vault Git commits are deferred and users manage formal file history with existing Git tools. After P3, retain this human-approved new-note shortcut without requiring Planner or another approval step, but share deterministic execution, archival/recovery and scoped Git commits with approved ChangeSets; this extension is not yet implemented. See [the shared execution decision](docs/adr/0018-shared-execution-for-direct-publication.md). Core owns this path independently of Desktop or Obsidian being open. Ordinary editing and startup do not start models. See [the MVP decision](docs/adr/0015-mvp-direct-draft-publication.md).
+
+## Vault-local candidate review
+
+Temporary ChangeSets live in `70_ChangeSets/<id>/` with `manifest.json` and a `candidates/` subtree mirroring formal target paths. Core owns workspace validation and lifecycle; Obsidian owns the review surface. Candidate files are excluded from Git, ordinary registration/full-text and semantic recall, and Source/Draft discovery, but remain available through explicit candidate reads. Obsidian search and Sync exclusions require their own settings.
+
+Review uses CodeMirror 6 MergeView with read-only Current on the left and editable Candidate on the right. Save writes only Candidate; refreshing Current preserves Candidate edits. Approval saves and validates final candidates and binds their contents and target preconditions before deterministic application; later candidate or Draft edits do not change approved execution. Keep Drafts in the native editor and avoid a second editable Desktop review surface.
+
+The first version has no persistent Base directory or automatic three-way merge. This does not remove execution preconditions, necessary temporary file backups, or durable recovery receipts in Core application data; backups pair unfinished Vault candidates with those receipts. See [the Vault-local review decision](docs/adr/0020-vault-local-changeset-review.md).
 
 ## Temporary ChangeSet consumption
 
@@ -199,7 +207,7 @@ See [the temporary plan decision](docs/adr/0009-temporary-changeset-consumption.
 ## Vault Git scope and commits
 
 - Git tracks `10_Ideas`, `40_Knowledge`, `50_Research`, and `60_Projects`; under `90_System`, only selected user configuration files such as Review/Relation analysis templates are tracked.
-- Under `20_Sources`, Git tracks Source Record Markdown files only. Independent Source Assets, Derived Representations, `30_Drafts`, and `00_Inbox` are excluded to keep history bounded.
+- Under `20_Sources`, Git tracks Source Record Markdown files only. Independent Source Assets, Derived Representations, `30_Drafts`, `70_ChangeSets`, and `00_Inbox` are excluded to keep history bounded.
 - After an approved ChangeSet is successfully applied, Core automatically commits the final versions of the tracked files involved in that integration. Earlier uncommitted user edits in those files are included; unrelated file changes are not committed.
 - Users may commit their own edits manually or configure periodic automatic commits. This does not require a Git commit before every planning round or integration; planning and candidate comparison use current local files, not the last committed versions.
 - Git commit failures and interrupted execution require recoverable implementation behavior without silently repeating approved content changes. Git is version history, not a second approval gate.
@@ -208,11 +216,13 @@ See [the scoped Git decision](docs/adr/0011-scoped-vault-git-history.md).
 
 ## AI execution and task models
 
-- Direct inference and an early Codex execution entry are both in the intended initial scope. Codex access should use the user's available Codex entitlement; it must not be assumed to require a separately billed API key.
-- Compiler, Review Analyzer, Relation Analyzer, and Integration Planner each support selection of API or Codex execution in the first useful release, with independently configured task models. Reuse minimal execution adapters rather than requiring the complete future Agent platform.
+- P2 implemented model API and Codex execution for Compiler and the two Analyzers. Preserve those capabilities and independent task models; P3 now prioritizes Agent execution and task-scoped Core Tools/MCP, requires an Agent Planner, and defers new model API paths and API quality optimization. The previous first-useful-release requirement for all four tasks to support both paths is no longer the current delivery scope.
+- Reuse the existing Codex runner and its loop rather than requiring a new SDK or a complete Agent platform. Codex access should use the user's available entitlement without assuming a separately billed API key. Deferring model inference API work does not suspend local client HTTP APIs or the independently configured Embedding/Reranker services.
 - Agent analysis can use the existing runner's tool loop through Core Tools/MCP. Complex research, cross-note maintenance, and broader orchestration remain separate extensions; an early analysis integration does not authorize direct Agent changes to approved content.
 - Model selection is configurable by task, including compilation, AI supplementary information, relationships, integration planning, complex research, and cross-note maintenance. Separate instructions and task semantics remain intact.
 - Provider and Worker execution protocols remain distinct even if both present a simple input/result interface to the workflow.
+
+Core tools enforce task-scoped authority: Compiler processes submitted material and Annotation; Analyzers read bounded evidence and produce metadata without editing the body; Planner can read current library evidence and edit only its assigned candidates. Agent tools do not grant human approval, formal application, or physical deletion. Record actual tool-read revisions without creating a whole-Vault snapshot. See [the Agent-first delivery decision](docs/adr/0019-agent-first-delivery-and-core-tools.md).
 
 ## Documentation ownership
 

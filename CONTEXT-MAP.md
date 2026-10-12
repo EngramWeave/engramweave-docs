@@ -9,14 +9,15 @@ Shared semantics and cross-component decisions belong in `engramweave-docs/`. Co
 - [docs/adr/](docs/adr/): significant cross-component decisions.
 - [Overall design v0.4](个人知识编译系统总体设计方案_v0.4.md): architecture baseline.
 - [Implementation plan](IMPLEMENTATION_PLAN.md) and [TODO](TODO.md): delivery scope and phase tracking; P1 is complete, with the first useful paper-to-knowledge loop delivered through P2 and P3.
-- [P2 plan](P2_IMPLEMENTATION_PLAN.md) and [P2 tasks](P2_TODO.md): current compilation and human-review implementation scope.
+- [P2 plan](P2_IMPLEMENTATION_PLAN.md) and [P2 tasks](P2_TODO.md): completed development contracts and remaining human acceptance records.
+- [P3 plan](P3_IMPLEMENTATION_PLAN.md) and [P3 tasks](P3_TODO.md): current Agent/MCP integration, Vault-local candidate review, approved execution and scoped Git scope.
 
 ## Component ownership
 
 | Context | Repository | Responsibility and existing documentation |
 |---|---|---|
-| Core / Desktop | [engramweave](../engramweave/) | [Component context](../engramweave/CONTEXT.md); Core contracts, persistence, jobs/rounds, scheduling, Desktop hosting, and implementation decisions; [P1 contracts](../engramweave/docs/p1-contracts.md), [Processing](../engramweave/docs/processing.md) |
-| Obsidian | [engramweave-obsidian](../engramweave-obsidian/) | Native editing and workflow sidebar integration; [component context](../engramweave-obsidian/CONTEXT.md) |
+| Core / Desktop | [engramweave](../engramweave/) | [Component context](../engramweave/CONTEXT.md); Core contracts, task-scoped Tools/MCP, candidate workspace validation/lifecycle, approved execution, persistence, jobs/rounds, scheduling, Desktop hosting, and implementation decisions; [P1 contracts](../engramweave/docs/p1-contracts.md), [Processing](../engramweave/docs/processing.md) |
+| Obsidian | [engramweave-obsidian](../engramweave-obsidian/) | Native Draft editing, workflow sidebar and Current/Candidate ChangeSet review; [component context](../engramweave-obsidian/CONTEXT.md) |
 | Zotero | [engramweave-zotero](../engramweave-zotero/) | Reading, selected material submission, and original locations; [component context](../engramweave-zotero/CONTEXT.md) |
 | Web Clipper | [engramweave-web-clipper](../engramweave-web-clipper/) | Web capture and Source protocol adaptation |
 | Mobile | [engramweave-mobile](../engramweave-mobile/) | Mobile capture and client access |

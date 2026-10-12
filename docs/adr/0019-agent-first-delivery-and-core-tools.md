@@ -1,0 +1,3 @@
+# Prioritize Agent execution and Core tools
+
+Given unsatisfactory model API results, P3 prioritizes the existing Codex runner and task-scoped Core Tools/MCP, requiring an Agent Planner while deferring new model API capabilities and optimization; retain the implemented P2 API paths, independent task models, client HTTP APIs, and recall services. This revises the earlier first-release dual-path delivery scope without replacing task semantics or building a new Core tool loop: Compiler remains submission-bound, Analyzers remain read-only, and Planner may edit only its candidate workspace, with human approval and formal application reserved to Core.
