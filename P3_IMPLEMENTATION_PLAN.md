@@ -1,7 +1,7 @@
 # P3：Agent 驱动整合、Vault 候选审查与批准执行
 
 > 基线：[总体设计 v0.4](个人知识编译系统总体设计方案_v0.4.md)、[CONTEXT.md](CONTEXT.md)、[总体计划](IMPLEMENTATION_PLAN.md)。
-> 阶段状态：A 开发已完成；B/C 合并为一次 BC 交付，BC 与 D 待实现；P1、P2 开发已完成。更新日期：2026-10-12。
+> 阶段状态：A 与 BC 开发已完成，B/C 为一次交付；D 待实现，真人验收单独记录；P1、P2 开发已完成。更新日期：2026-10-12。
 > 配套清单：[P3_TODO.md](P3_TODO.md)；范围决定：[ADR-0019](docs/adr/0019-agent-first-delivery-and-core-tools.md)、[ADR-0020](docs/adr/0020-vault-local-changeset-review.md)。
 
 ## 1. 目标与边界

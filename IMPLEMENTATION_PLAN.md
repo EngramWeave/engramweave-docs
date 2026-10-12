@@ -6,7 +6,7 @@
 
 ## 1. 目标、当前基础与范围
 
-P1、P2 开发已完成，作为现有实现基线，不重做已交付能力。P2 已实现状态、编译／分析、语义召回、调度、论文投递和人工审阅；P3-A 已实现 Agent Planner、Core Tools／MCP 与 Vault 候选编辑，接下来以 BC 一次交付完成完整影响审查、多文件批准执行及恢复，再由 D 接入自动 Git。模型 API 扩展暂缓，保留 P2 已有能力。MVP 已获批准的人工新建入口属于明确例外，不等同于完整 P3。
+P1、P2 开发已完成，作为现有实现基线，不重做已交付能力。P2 已实现状态、编译／分析、语义召回、调度、论文投递和人工审阅；P3-A 已实现 Agent Planner、Core Tools／MCP 与 Vault 候选编辑，BC 已一次交付完整影响审查、多文件批准执行、归档及恢复，接下来由 D 接入自动 Git 和生命周期清理。模型 API 扩展暂缓，保留 P2 已有能力。MVP 已获批准的人工新建入口属于明确例外，不等同于完整 P3。
 
 P1 历史范围保留在 [P1_IMPLEMENTATION_PLAN.md](P1_IMPLEMENTATION_PLAN.md) 和 [P1_TODO.md](P1_TODO.md)，现有受支持行为见 [P1 合同](../engramweave/docs/p1-contracts.md)。后续工作以本计划的 P3 起点为准，不将历史清单的未回填项视为待重做任务。
 
@@ -92,7 +92,7 @@ M1 是已完成的 P1 基础；M2 是 P3 完成后的首个实用版本；M3 是
 
 复用 P2 已有能力，先验证 Obsidian MergeView 审查体验，再补齐 Core 候选工作区及任务工具，推进真实 Agent Planner → 人工审查 → 批准执行 → Git 与真实闭环，详细任务见 [P3 计划](P3_IMPLEMENTATION_PLAN.md) 和 [P3 TODO](P3_TODO.md)。
 
-保留 Publish to Knowledge 人工快捷新建，不强制调用 Planner 或增加批准步骤；P3 将其接入与 ChangeSet 相同的 Executor、归档恢复及自动 Git。当前 MVP 尚无自动 Git，升级必须保留已有未完成审批回执的恢复。见 [ADR-0018](docs/adr/0018-shared-execution-for-direct-publication.md)。
+保留 Publish to Knowledge 人工快捷新建，不强制调用 Planner 或增加批准步骤；BC 已将其接入与 ChangeSet 相同的 Executor 和归档恢复，自动 Git 留在 D。当前 MVP 尚无自动 Git，升级必须保留已有未完成审批回执的恢复。见 [ADR-0018](docs/adr/0018-shared-execution-for-direct-publication.md)。
 
 新增模型 API 路径、API 效果优化与 Core 自建工具循环暂缓；这不删除 P2 API，也不暂停客户端本地 HTTP API 或已有 Embedding／Reranker。模型 API 后续根据真实需要恢复，不绑定到一个虚定阶段。范围与候选审查决定见 [ADR-0019](docs/adr/0019-agent-first-delivery-and-core-tools.md)、[ADR-0020](docs/adr/0020-vault-local-changeset-review.md)。
 
