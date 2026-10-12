@@ -1,7 +1,7 @@
 # P3 实施清单
 
 > 合同：[P3_IMPLEMENTATION_PLAN.md](P3_IMPLEMENTATION_PLAN.md)；上位范围：[IMPLEMENTATION_PLAN.md](IMPLEMENTATION_PLAN.md)。
-> P1、P2 开发已完成。P3-A 开发已完成，原生宿主程序化验证与真实 Agent 验证分别留在本地记录；B–D 待实现。
+> P1、P2 开发已完成。P3-A 开发已完成，原生宿主程序化验证与真实 Agent 验证分别留在本地记录；B/C 合并为一次交付，BC 与 D 待实现。
 
 实施遵守各仓库 AGENTS、文档规范和涉及测试的 tests/AGENTS。复用 P2；模型 API 扩展暂缓，保留现有配置与实现。本地 Core HTTP API、Embedding／Reranker 不在暂缓范围。
 
@@ -21,17 +21,21 @@
 - [x] 校验范围、候选完整性与可执行性；完整发布才进入 planned，失败保留原阶段。
 - [x] 真实 Agent 通过工具读取／检索／写候选，正式文件保持原样，越权路径被拒绝。
 
-## B：Obsidian 候选审查
+## BC：候选审查、批准执行与恢复
+
+详细任务按 [P3_BC_TODO.md](.local/P3/P3_BC_TODO.md) 跟踪，合同见 [BC 计划](.local/P3/P3_BC_IMPLEMENTATION_PLAN.md)。下列两部分属于一次交付，沿用 A 的侧栏和编辑能力。
+
+### 候选审查
 
 - [ ] 同一工作台列出涉及文件及结构影响；Current ↔ Candidate 双栏，新增文件左侧为空。
 - [x] 右侧编辑与 `Ctrl+S` 仅保存 Candidate；Refresh Current 保留候选修改。（已随 A 实现。）
 - [x] 切换、关闭与重开时明确未保存状态并保护编辑；Draft 保持原生编辑，Desktop 不新增第二套可编辑 Diff。（已随 A 实现。）
 - [ ] 同一机制支持取舍、拒绝、整组处理、打回重新规划和明确批准；首版不依赖逐 hunk 操作。
-- [ ] 批准前保存及校验最终候选，绑定批准内容和目标前置条件；并发冲突可见。
+- [ ] 批准前保存本方案全部脏候选并校验有效集合，绑定最终批准字节和最后审查的 Current 前置条件；并发冲突可见。
 - [x] 普通 Draft／本地编辑不自动撤销候选或启动规划；取消 Review Complete／取消或丢失候选沿既有阶段语义处理。（已随 A 实现。）
 - [ ] 展示来源、关系、目录、废弃及新一级领域影响；拒绝后的依赖校验，未批准过程不写正式内容。
 
-## C：批准执行与恢复
+### 批准执行与恢复
 
 - [ ] Executor 应用固定的最终批准内容并检查目标前置条件，后续 Candidate／Draft 编辑不改本次执行。
 - [ ] Knowledge／Research 与多文件重组支持，同份 Draft 可贡献多份正式笔记。

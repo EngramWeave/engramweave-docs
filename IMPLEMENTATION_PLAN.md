@@ -6,7 +6,7 @@
 
 ## 1. 目标、当前基础与范围
 
-P1、P2 开发已完成，作为现有实现基线，不重做已交付能力。P2 已实现状态、编译／分析、语义召回、调度、论文投递和人工审阅；P3-A 已实现 Agent Planner、Core Tools／MCP 与 Vault 候选编辑，接下来完成完整影响审查、多文件批准执行及自动 Git。模型 API 扩展暂缓，保留 P2 已有能力。MVP 已获批准的人工新建入口属于明确例外，不等同于完整 P3。
+P1、P2 开发已完成，作为现有实现基线，不重做已交付能力。P2 已实现状态、编译／分析、语义召回、调度、论文投递和人工审阅；P3-A 已实现 Agent Planner、Core Tools／MCP 与 Vault 候选编辑，接下来以 BC 一次交付完成完整影响审查、多文件批准执行及恢复，再由 D 接入自动 Git。模型 API 扩展暂缓，保留 P2 已有能力。MVP 已获批准的人工新建入口属于明确例外，不等同于完整 P3。
 
 P1 历史范围保留在 [P1_IMPLEMENTATION_PLAN.md](P1_IMPLEMENTATION_PLAN.md) 和 [P1_TODO.md](P1_TODO.md)，现有受支持行为见 [P1 合同](../engramweave/docs/p1-contracts.md)。后续工作以本计划的 P3 起点为准，不将历史清单的未回填项视为待重做任务。
 

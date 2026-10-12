@@ -14,6 +14,8 @@ Shared semantics and cross-component decisions belong in `engramweave-docs/`. Co
 
 - [P3 A plan](.local/P3/P3_A_IMPLEMENTATION_PLAN.md) and [A tasks](.local/P3/P3_A_TODO.md): local phase delivery tracking; maintained component contracts live in [Core/Desktop](../engramweave/docs/planning.md) and [Obsidian](../engramweave-obsidian/README.md).
 
+- [P3 BC plan](.local/P3/P3_BC_IMPLEMENTATION_PLAN.md) and [BC tasks](.local/P3/P3_BC_TODO.md): combined review, approval, deterministic application, archival and recovery delivery. Internal slices do not constitute separate B/C releases; scoped Git remains D.
+
 ## Component ownership
 
 | Context | Repository | Responsibility and existing documentation |
