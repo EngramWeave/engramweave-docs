@@ -12,6 +12,8 @@ Shared semantics and cross-component decisions belong in `engramweave-docs/`. Co
 - [P2 plan](P2_IMPLEMENTATION_PLAN.md) and [P2 tasks](P2_TODO.md): completed development contracts and remaining human acceptance records.
 - [P3 plan](P3_IMPLEMENTATION_PLAN.md) and [P3 tasks](P3_TODO.md): current Agent/MCP integration, Vault-local candidate review, approved execution and scoped Git scope.
 
+- [P3 A plan](P3_A_IMPLEMENTATION_PLAN.md) and [A tasks](P3_A_TODO.md): ordered candidate-workspace, task-scoped Agent tools and Planner delivery; component implementation choices live in [Core/Desktop](../engramweave/docs/p3-a-implementation-plan.md) and [Obsidian](../engramweave-obsidian/docs/p3-a-implementation-plan.md).
+
 ## Component ownership
 
 | Context | Repository | Responsibility and existing documentation |

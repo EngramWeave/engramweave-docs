@@ -33,6 +33,8 @@
 
 ## 3. A：Agent 工具与候选工作区
 
+详细施工顺序、代码复用与 A-G 验收见 [A 计划](P3_A_IMPLEMENTATION_PLAN.md) 和 [A TODO](P3_A_TODO.md)。A 包含候选编辑器验证及实际候选读写，B 完成最终审查／批准；制定计划不代表 A 已实现。
+
 ### 3.1 先验证审查体验
 
 先在 Obsidian 自定义 ItemView 中验证 CodeMirror 6 `@codemirror/merge` 的双栏 MergeView：左侧 Current 只读、右侧 Candidate 可编辑，支持保存、切换文件和刷新左侧。使用真实 Markdown 与插件构建验证依赖兼容、键盘操作、长文滚动和窗口关闭后的保存行为；成熟组件负责编辑及 Diff，不搬入完整 VS Code 或整套第三方插件。此切片只验证审查与候选保存，不提前写正式文件。

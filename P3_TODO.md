@@ -7,6 +7,8 @@
 
 ## A：Agent 工具与候选
 
+详细任务按 [P3_A_TODO.md](P3_A_TODO.md) 跟踪，验收依照 [A 计划](P3_A_IMPLEMENTATION_PLAN.md)；以下保留上层范围。
+
 - [ ] 在 Obsidian ItemView 验证 CodeMirror 6 MergeView：左侧只读、右侧可编辑，真实 Markdown、键盘、滚动及关闭保存体验可用。
 - [ ] Core 管理 `70_ChangeSets/<id>/manifest.json` 与 `candidates/`，候选镜像正式相对目标，只保存涉及文件，不建立 `bases/` 或三方合并。
 - [ ] 明确排除 `70_ChangeSets` 的 Git、正式登记／全文检索、语义索引及 Source／Draft 发现；说明 Obsidian 搜索／Sync 排除需单独配置。
