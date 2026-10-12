@@ -46,6 +46,16 @@
 - [x] 升级后恢复未完成 P2 MVP 回执，不丢已接受审批。
 - [x] 成功／明确取消后清理 ChangeSet 工作区；未完成批准操作保留，必要结果归 Job；备份包含候选与 Core 恢复事实。
 
+## Desktop Review / Changes 增量
+
+设计见 [本地页面方案](.local/P3/P3_DESKTOP_REVIEW_CHANGES_DESIGN.md)。采用日常管理产品范围并分步交付，正文编辑和批准留在 Obsidian。
+
+- [ ] Review 全局 Draft 文件列表、筛选、详情、分析概况和关联跳转，包含旧稿 / discarded / 异常文件。
+- [ ] Changes 存活工作区列表、全部影响、候选预览及任务归属，不复制 Jobs 历史。
+- [ ] 接通已有 Core 安全取消 / 重新规划及当前选中稿的规划入口，已接受执行不可取消。
+- [ ] Review Complete 对其他 active 同 Source 稿件默认提示废弃、支持保留，Core 统一接受 / 恢复且保护新选择。
+- [ ] 原生页面、窄窗口、断线、固定宿主路由及受影响回归；真实 / 模拟 / 自动 / 真人证据区分。
+
 ## D：Git、生命周期与 P3-G
 
 - [ ] 约定跟踪／排除范围，Source 只跟踪 Record Markdown，排除 `70_ChangeSets`。
@@ -53,6 +63,7 @@
 - [ ] 快捷新建同样自动提交；用户手动／定时 commit 入口。
 - [ ] Git 失败单独可见、可恢复，不能重复应用正式变更。
 - [ ] 复用 Source／Draft 操作，补足正式文件标记／恢复／清理；Source Restore 已按 Q43 仅恢复 Source 为 active/pending。
+- [ ] 补齐独立 Draft 废弃／恢复／清理；废弃当前所选稿统一撤销未批准流程、Source 返回 compiled，不按剩余 Draft 数量决定；未选稿不改阶段，archived 不回退，Restore 不授予审阅许可。
 - [ ] 来源引用默认保护、用户明确覆盖、专属 Asset／Derived 与外部 Asset 边界。
 - [ ] 应用后登记及基本找回可用，候选副本不混入召回，Embedding 保持显式更新。
 - [ ] Agent Planner、论文／网页、跨文件重组、Research、快捷新建与 Git 真实验收，不要求新增 Planner API。

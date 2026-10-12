@@ -91,6 +91,12 @@ Draft 普通编辑不撤销 Review Complete、不触发重新规划，也不自�
 
 成功消费或明确取消后清理 `70_ChangeSets/<id>`；必要 Job 结果保留，未明确结束的批准操作保留至结果清楚。备份应覆盖 Vault 的未完成候选与 Core 执行回执；仅重建数据库不能代替两者。正式历史交给 Git，不建立永久完整 ChangeSet 档案。
 
+### Desktop Review / Changes 增量
+
+Review 以 Draft 文件为资源，Changes 以现存 ChangeSet 工作区为资源，沿用 Sources 的列表、筛选和详情布局；不把它们设计成新的工作流阶段或第二套编辑 / 批准界面。设计见 [本地页面方案](.local/P3/P3_DESKTOP_REVIEW_CHANGES_DESIGN.md)。先交付文件浏览、上下文、预览、关联跳转以及已有 Core 支持的安全取消 / 重规划；完整独立 Draft 废弃 / 恢复 / 清理随 D 生命周期统一实现，不为页面另建业务规则。
+
+本轮明确增加 Obsidian Review Complete 的同 Source 其他 active Draft 整理提示：默认勾选废弃，用户可保留，只有存在其他稿件时才弹窗。Core 统一接受和恢复审阅选择及所确认的标记，不修改正文、不删除文件、不影响新选择；受保护输入不自动标记。多 Draft 的当前选中稿废弃规则按总体设计 §6.5：未批准流程撤销并返回 compiled，不按稿件数量决定、不自动切换选择、archived 不回退。
+
 ## 6. D：Git、清理与真实使用闭环
 
 Git 跟踪 `10_Ideas`、`40_Knowledge`、`50_Research`、`60_Projects`，`20_Sources` 只跟踪 Record Markdown，`90_System` 只跟踪选定用户配置。独立 Asset、Derived Representation、`30_Drafts`、`70_ChangeSets` 和 `00_Inbox` 不跟踪。
