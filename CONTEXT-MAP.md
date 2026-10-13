@@ -16,7 +16,7 @@ Shared semantics and cross-component decisions belong in `engramweave-docs/`. Co
 
 - [P3 BC plan](.local/P3/P3_BC_IMPLEMENTATION_PLAN.md) and [BC tasks](.local/P3/P3_BC_TODO.md): implemented combined review, approval, deterministic application, archival and recovery; human acceptance remains separately recorded. Internal slices do not constitute separate B/C releases; scoped Git remains D.
 
-- [Desktop resource-page design](.local/P3/P3_DESKTOP_REVIEW_CHANGES_DESIGN.md): Draft and live ChangeSet browsing, existing safe management, the confirmed sibling-cleanup prompt, and standalone lifecycle scope deferred to D. Implementation is not yet delivered.
+- [Desktop resource-page design](.local/P3/P3_DESKTOP_REVIEW_CHANGES_DESIGN.md): Draft and live ChangeSet browsing, existing safe management, the confirmed sibling-cleanup prompt, and standalone lifecycle scope deferred to D. Resource browsing, existing safe management and the sibling-cleanup prompt are implemented; native programmatic validation remains distinct from human acceptance.
 
 ## Component ownership
 

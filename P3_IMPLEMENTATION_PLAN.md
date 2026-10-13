@@ -93,6 +93,8 @@ Draft 普通编辑不撤销 Review Complete、不触发重新规划，也不自�
 
 ### Desktop Review / Changes 增量
 
+该文件页面增量已完成开发，原生程序化验证与真人验收分别记录；完整独立 Draft 生命周期仍随 D 实现。
+
 Review 以 Draft 文件为资源，Changes 以现存 ChangeSet 工作区为资源，沿用 Sources 的列表、筛选和详情布局；不把它们设计成新的工作流阶段或第二套编辑 / 批准界面。设计见 [本地页面方案](.local/P3/P3_DESKTOP_REVIEW_CHANGES_DESIGN.md)。先交付文件浏览、上下文、预览、关联跳转以及已有 Core 支持的安全取消 / 重规划；完整独立 Draft 废弃 / 恢复 / 清理随 D 生命周期统一实现，不为页面另建业务规则。
 
 本轮明确增加 Obsidian Review Complete 的同 Source 其他 active Draft 整理提示：默认勾选废弃，用户可保留，只有存在其他稿件时才弹窗。Core 统一接受和恢复审阅选择及所确认的标记，不修改正文、不删除文件、不影响新选择；受保护输入不自动标记。多 Draft 的当前选中稿废弃规则按总体设计 §6.5：未批准流程撤销并返回 compiled，不按稿件数量决定、不自动切换选择、archived 不回退。
